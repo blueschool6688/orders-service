@@ -23,7 +23,7 @@ import tableOrderRoutes from "./modules/tableOrderRoutes";
 import adminTableOrderRoutes from "./modules/adminTableOrderRoutes";
 import diningTableRoutes from "./modules/diningTableRoutes";
 import frontendRoutes from "./modules/frontendRoutes";
-
+import topUpRoutes from "./modules/topUpRoutes";
 
 const baseRoutes = [
     {
@@ -85,7 +85,8 @@ const routes = baseRoutes.concat(
     tableOrderRoutes,
     adminTableOrderRoutes,
     diningTableRoutes,
-    frontendRoutes
+    frontendRoutes,
+    topUpRoutes
 );
 
 const permission = store.getters.authPermission;

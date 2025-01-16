@@ -3329,6 +3329,9 @@ input:checked + div svg {
 .relative {
   position: relative;
 }
+.sticky {
+  position: sticky;
+}
 .inset-0 {
   inset: 0px;
 }
@@ -3407,6 +3410,9 @@ input:checked + div svg {
 .right-2 {
   right: 0.5rem;
 }
+.top-\[100px\] {
+  top: 100px;
+}
 .-z-10 {
   z-index: -10;
 }
@@ -3427,6 +3433,9 @@ input:checked + div svg {
 }
 .z-\[60\] {
   z-index: 60;
+}
+.col-span-12 {
+  grid-column: span 12 / span 12;
 }
 .m-0 {
   margin: 0px;
@@ -3548,6 +3557,15 @@ input:checked + div svg {
 }
 .mt-\[60px\] {
   margin-top: 60px;
+}
+.mr-2 {
+  margin-right: 0.5rem;
+}
+.mt-6 {
+  margin-top: 1.5rem;
+}
+.mt-\[100px\] {
+  margin-top: 100px;
 }
 .block {
   display: block;
@@ -3928,6 +3946,9 @@ input:checked + div svg {
 .cursor-pointer {
   cursor: pointer;
 }
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
 .resize-none {
   resize: none;
 }
@@ -3944,6 +3965,9 @@ input:checked + div svg {
 }
 .grid-cols-\[repeat\(auto-fill\2c _minmax\(140px\2c _1fr\)\)\] {
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 .flex-col {
   flex-direction: column;
@@ -4027,6 +4051,11 @@ input:checked + div svg {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 .self-end {
   align-self: flex-end;
@@ -4359,6 +4388,10 @@ input:checked + div svg {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity, 1));
 }
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
@@ -4851,6 +4884,9 @@ input:checked + div svg {
 .opacity-100 {
   opacity: 1;
 }
+.opacity-50 {
+  opacity: 0.5;
+}
 .shadow-\[0px_6px_10px_rgba\(23\2c _114\2c _255\2c _0\.24\)\] {
   --tw-shadow: 0px 6px 10px rgba(23, 114, 255, 0.24);
   --tw-shadow-colored: 0px 6px 10px var(--tw-shadow-color);
@@ -4909,6 +4945,11 @@ input:checked + div svg {
 .shadow-xs {
   --tw-shadow: 0px 6px 32px 0px rgba(0, 0, 0, 0.04);
   --tw-shadow-colored: 0px 6px 32px 0px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow {
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 .outline {
@@ -5581,6 +5622,11 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
   --tw-shadow-colored: 0px 6px 32px 0px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.hover\:shadow-md:hover {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 .focus\:z-10:focus {
   z-index: 10;
 }
@@ -5768,6 +5814,10 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     z-index: 10;
   }
 
+  .md\:col-span-6 {
+    grid-column: span 6 / span 6;
+  }
+
   .md\:mx-0 {
     margin-left: 0px;
     margin-right: 0px;
@@ -5779,6 +5829,10 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
   .md\:mt-\[74px\] {
     margin-top: 74px;
+  }
+
+  .md\:mt-\[100px\] {
+    margin-top: 100px;
   }
 
   .md\:block {
@@ -5877,6 +5931,14 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
   .lg\:top-\[74px\] {
     top: 74px;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
+  .lg\:col-span-8 {
+    grid-column: span 8 / span 8;
   }
 
   .lg\:mt-0 {

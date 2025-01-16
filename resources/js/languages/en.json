@@ -79,6 +79,18 @@
         "point_exchange_rate": "Point exchange rate"
     },
     "label": {
+        "selected_package": "Selected Package",
+        "payment_amount": "Payment Amount",
+        "total_payment": "Total payment",
+        "total_points": "Total Points",
+        "payment_summary": "Payment Summary",
+        "bank_transfer": "Bank Transfer",
+        "payment_methods": "Payment Method",
+        "entered_points": "Entered Points",
+        "select_package": "Select Package",
+        "bonus_points": "Bonus Point",
+        "points": "Points",
+        "enter_points": "Enter number of exchange points",
         "email_or_phone": "Email or Phone",
         "or_continue_with": "Or continue with",
         "register_account": "Register Account",
@@ -566,6 +578,7 @@
         "rate": "Exchange Rate"
     },
     "button": {
+        "confirm_payment": "Confirm payment",
         "add": "Add",
         "save": "Save",
         "edit": "Edit",
@@ -653,7 +666,8 @@
         "upload_file": "Upload File",
         "pdf":"PDF",
         "continue_with_google": "Continue with google",
-        "update_password": "Update Password"
+        "update_password": "Update Password",
+        "top_up": "Top up"
     },
     "number": {
         "10": "10",

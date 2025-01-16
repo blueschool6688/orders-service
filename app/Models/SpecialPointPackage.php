@@ -18,6 +18,7 @@ class SpecialPointPackage extends Model
         'name',
         'price',
         'points',
+        'bonus_points',
         'rank_id',
         'thumbnail',
         'description',

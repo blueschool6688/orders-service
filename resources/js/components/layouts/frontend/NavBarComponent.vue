@@ -28,12 +28,21 @@
                     <!-- Login and Signup Buttons -->
 
                     <div v-if="clientLogged" class="flex flex-col gap-4">
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center justify-center gap-2">
                             <img class="w-10 h-10 rounded-full object-cover" :src="clientInfo.image" alt="avatar">
                             <h3 class="text-sm font-medium">{{ textShortener(clientInfo.name, 20) }}</h3>
                         </div>
-
+                        <div class="flex flex-col gap-1 items-center justify-center">
+                            <p class="text-xs mb-0.5">{{ clientInfo.email }}</p>
+                            <p dir="ltr" class="text-xs">{{ clientInfo.country_code }} {{ clientInfo.phone }}</p>
+                            <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i></h3>
+                        </div>
                         <nav>
+                            <router-link @click="closeMobileMenu" :to="{ name: 'client.topup' }"
+                                         class="transition w-full flex items-center gap-3 py-2 border-b border-gray-200">
+                                <i class="fa-solid fa-money-check-dollar"></i>
+                                <span class="text-sm">{{ $t('button.top_up') }}</span>
+                            </router-link>
                             <router-link @click="closeMobileMenu" :to="{ name: 'client.profile.editProfile' }"
                                          class="transition w-full flex items-center gap-3 py-2 border-b border-gray-200">
                                 <i class="lab lab-edit"></i>
@@ -194,6 +203,11 @@
                                 <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i></h3>
                             </div>
                             <nav>
+                                <router-link @click="closeMobileMenu" :to="{ name: 'client.topup' }"
+                                             class="paper-link transition w-full flex items-center gap-3.5 py-3 border-b last:border-none border-[#EFF0F6]">
+                                    <i class="fa-solid fa-money-check-dollar"></i>
+                                    <span class="text-sm leading-6 capitalize">{{ $t('button.top_up') }}</span>
+                                </router-link>
                                 <router-link @click="closeMobileMenu" :to="{ name: 'client.profile.editProfile' }"
                                              class="paper-link transition w-full flex items-center gap-3.5 py-3 border-b last:border-none border-[#EFF0F6]">
                                     <i class="lab lab-edit lab-font-size-17"></i>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import clientAxios from "../../config/clientAxios";
 
 export const point = {
     namespaced: true,
@@ -33,6 +34,28 @@ export const point = {
                 .catch((err)=>{
                     reject(err)
                 })
+            })
+        },
+        exchange:function(context,payload){
+            return new Promise((resolve, reject)=>{
+                let url = "topup/exchange";
+                clientAxios.post(url,payload).then((res)=>{
+                    resolve(res)
+                })
+                .catch((err)=>{
+                    reject(err)
+                })
+            })
+        },
+        createRequest:function(content,payload){
+            return new Promise((resolve, reject)=>{
+                clientAxios.post("/topup/create-request",payload)
+                    .then(res => {
+                        resolve(res)
+                    })
+                    .catch(err =>{
+                        reject(err)
+                    })
             })
         }
     },

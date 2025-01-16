@@ -79,6 +79,18 @@
         "point_exchange_rate": "Tỉ giá quy đổi điểm"
     },
     "label": {
+        "selected_package": "Gói đã chọn",
+        "payment_amount": "Số tiền phải thanh toán",
+        "total_payment": "Tổng thanh toán",
+        "total_points": "Tổng điểm",
+        "payment_summary": "Chi tiết thanh toán",
+        "bank_transfer": "Chuyển khoản ngân hàng",
+        "payment_methods": "Phương thức thanh toán",
+        "entered_points": "Điểm đã nhập",
+        "select_package": "Chọn gói điểm",
+        "bonus_points": "Điểm khuyến mãi",
+        "points": "Điểm",
+        "enter_points": "Nhập số điểm quy đổi",
         "email_or_phone": "Email hoặc Số điện thoại",
         "or_continue_with": "Hoặc tiếp tục với",
         "register_account": "Đăng ký tài khoản",
@@ -566,6 +578,7 @@
         "rate": "Tỉ giá quy đổi"
     },
     "button": {
+        "confirm_payment": "Xác nhận thanh toán",
         "add": "Thêm",
         "save": "Lưu",
         "edit": "Chỉnh sửa",
@@ -653,7 +666,8 @@
         "upload_file": "Tải lên tệp",
         "pdf": "PDF",
         "continue_with_google": "Tiếp tục với google",
-        "update_password": "Cập nhật mật khẩu"
+        "update_password": "Cập nhật mật khẩu",
+        "top_up": "Nạp điểm"
     },
     "number": {
         "10": "10",

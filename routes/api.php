@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Frontend\TopUpController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OtpController;
@@ -605,4 +606,10 @@ Route::prefix('table')->name('table.')->middleware(['installed', 'apiKey', 'loca
 Route::prefix('country-code')->name('country-code.')->group(function () {
     Route::get('/', [CountryCodeController::class, 'index']);
     Route::get('/show/{country}', [CountryCodeController::class, 'show']);
+});
+
+Route::middleware(['auth:sanctum-client'])->prefix('topup')->name('topup.')->group(function () {
+    Route::post('/exchange', [TopupController::class, 'exchange']);
+
+    Route::post('/create-request', [TopupController::class, 'createRequest']);
 });
