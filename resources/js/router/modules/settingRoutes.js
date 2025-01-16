@@ -33,6 +33,7 @@ import PaymentGatewayComponent from "../../components/admin/settings/PaymentGate
 import SmsGatewayComponent from "../../components/admin/settings/SmsGateway/SmsGatewayComponent";
 import NotificationAlertComponent from "../../components/admin/settings/NotificationAlert/NotificationAlertComponent";
 import NotificationComponent from "../../components/admin/settings/Notification/NotificationComponent";
+import PointComponent from "../../components/admin/settings/Point/PointComponent.vue";
 
 export default [
     {
@@ -449,6 +450,17 @@ export default [
                     breadcrumb: "notification",
                 },
             },
+            {
+                path:"point-exchange",
+                name:"admin.settings.point_exchange_rate",
+                component: PointComponent,
+                meta: {
+                    isFrontend: false,
+                    auth:true,
+                    permissionUrl: "settings",
+                    breadcrumb: "point_exchange_rate"
+                }
+            }
         ],
     },
 ];

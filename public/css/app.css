@@ -3404,6 +3404,9 @@ input:checked + div svg {
 .top-\[75px\] {
   top: 75px;
 }
+.right-2 {
+  right: 0.5rem;
+}
 .-z-10 {
   z-index: -10;
 }

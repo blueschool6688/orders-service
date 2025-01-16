@@ -70,6 +70,10 @@
                 <i class="lab lab-languages text-sm"></i>
                 {{ $t("menu.languages") }}
             </router-link>
+            <router-link :to="{ name: 'admin.settings.point_exchange_rate' }" class="db-tab-btn">
+                <i class="fa-sharp-duotone fa-solid fa-arrow-right-arrow-left"></i>
+                {{ $t("menu.point_exchange_rate") }}
+            </router-link>
 <!--            <router-link :to="{ name: 'admin.settings.smsGateway' }" class="db-tab-btn">-->
 <!--                <i class="lab lab-sms text-sm"></i>-->
 <!--                {{ $t("menu.sms_gateway") }}-->

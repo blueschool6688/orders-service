@@ -66,8 +66,8 @@ class LoginController extends Controller
             ], 400);
         }
 
-        $branchId = Auth::user()->branch_id;
-        if (Auth::user()->branch_id == 0) {
+        $branchId = Auth::guard('web')->user()->branch_id;
+        if (Auth::guard('web')->user()->branch_id == 0) {
             $branchId = Settings::group('site')->get('site_default_branch');
         }
         $this->defaultAccessService->storeOrUpdate(['branch_id' => $branchId]);

@@ -61,6 +61,10 @@ use App\Http\Controllers\Admin\EmployeeAddressController;
 use App\Http\Controllers\Admin\NotificationAlertController;
 use App\Http\Controllers\Admin\CreditBalanceReportController;
 use App\Http\Controllers\Admin\AdministratorAddressController;
+use App\Http\Controllers\Admin\PointExchangeController;
+
+//FRONTEND
+
 use App\Http\Controllers\Table\OrderController as TableOrderController;
 use App\Http\Controllers\Frontend\ItemController as FrontendItemController;
 use App\Http\Controllers\Frontend\PageController as FrontendPageController;
@@ -339,6 +343,11 @@ Route::prefix('admin')->name('admin.')->middleware(['installed', 'apiKey', 'auth
         Route::prefix('notification')->name('notification.')->group(function () {
             Route::get('/', [NotificationController::class, 'index']);
             Route::post('/', [NotificationController::class, 'update']);
+        });
+
+        Route::prefix('point-exchange')->name('point-exchange.')->group(function () {
+            Route::get('/',[PointExchangeController::class, 'index']);
+            Route::post('/',[PointExchangeController::class, 'store']);
         });
     });
 

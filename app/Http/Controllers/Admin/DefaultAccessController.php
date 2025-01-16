@@ -22,7 +22,7 @@ class DefaultAccessController extends AdminController
     public function index() : \Illuminate\Http\Response | \Illuminate\Contracts\Foundation\Application | DefaultAccessResource | \Illuminate\Contracts\Routing\ResponseFactory
     {
         try {
-            return new DefaultAccessResource($this->defaultAccessService->show());
+            return new DefaultAccessResource($this->defaultAccessService->show('sanctum'));
         } catch( Exception $exception ) {
             return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }

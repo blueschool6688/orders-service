@@ -20,7 +20,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class User extends Authenticatable implements HasMedia
+class  User extends Authenticatable implements HasMedia
 {
     use InteractsWithMedia;
     use HasApiTokens;
@@ -49,7 +49,10 @@ class User extends Authenticatable implements HasMedia
         'country_code',
         'is_guest',
         'status',
-        'email_verified_at'
+        'email_verified_at',
+        'balance',
+        'current_rank_id',
+        'total_spending'
     ];
 
     /**
@@ -139,5 +142,20 @@ class User extends Authenticatable implements HasMedia
     public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(MessageHistory::class, 'user_id', 'id')->where('is_read', Ask::NO);
+    }
+
+    public function rank(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(MembershipRank::class,'current_rank_id','id')->withTrashed();
+    }
+
+    public function updateBalance(int $balanceChange = 0): void
+    {
+        $currentBalance = $this->balance ?? 0;
+        $newBalance = max(0, $currentBalance + $balanceChange);
+
+        $this->update([
+            'balance' => $newBalance,
+        ]);
     }
 }

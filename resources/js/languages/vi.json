@@ -75,7 +75,8 @@
         "setup": "Thiết lập",
         "home": "Trang chủ",
         "dining_tables": "Bàn ăn",
-        "table_orders": "Đơn hàng tại bàn"
+        "table_orders": "Đơn hàng tại bàn",
+        "point_exchange_rate": "Tỉ giá quy đổi điểm"
     },
     "label": {
         "email_or_phone": "Email hoặc Số điện thoại",
@@ -560,7 +561,9 @@
         "enter_transaction_id": "Nhập ID giao dịch",
         "mobile_banking": "Chuyển khoản Online",
         "order_total": "Giá trị đơn hàng",
-        "update_password": "Cập nhật mật khẩu"
+        "update_password": "Cập nhật mật khẩu",
+        "unit": "Điểm",
+        "rate": "Tỉ giá quy đổi"
     },
     "button": {
         "add": "Thêm",

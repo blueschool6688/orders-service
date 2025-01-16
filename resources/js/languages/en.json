@@ -75,7 +75,8 @@
         "setup": "Setup",
         "home": "Home",
         "dining_tables": "Dining Tables",
-        "table_orders": "Table Orders"
+        "table_orders": "Table Orders",
+        "point_exchange_rate": "Point exchange rate"
     },
     "label": {
         "email_or_phone": "Email or Phone",
@@ -560,7 +561,9 @@
         "enter_transaction_id": "Enter Transaction ID",
         "mobile_banking": "Mobile Banking",
         "order_total": "Order Total",
-        "update_password": "Update Password"
+        "update_password": "Update Password",
+        "unit": "Point",
+        "rate": "Exchange Rate"
     },
     "button": {
         "add": "Add",
