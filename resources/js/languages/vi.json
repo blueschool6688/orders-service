@@ -79,6 +79,9 @@
         "point_exchange_rate": "Tỉ giá quy đổi điểm"
     },
     "label": {
+        "payment_success": "Thanh toán thành công",
+        "scan_to_pay": "Quét để thanh toán",
+        "payment_details": "Thông tin thanh toán",
         "selected_package": "Gói đã chọn",
         "payment_amount": "Số tiền phải thanh toán",
         "total_payment": "Tổng thanh toán",

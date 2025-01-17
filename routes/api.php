@@ -177,6 +177,7 @@ Route::prefix('profile')->name('profile.')->middleware(['installed', 'apiKey', '
     Route::middleware(['auth:sanctum-client'])->prefix('client')->name('client.')->group(function () {
         Route::match(['put', 'patch'], '/update', [ProfileController::class, 'clientUpdate']);
         Route::match(['put', 'patch'], '/change-password', [ProfileController::class, 'clientChangePassword']);
+        Route::post('/change-image',[ProfileController::class, 'clientChangeImage']);
     });
 });
 
@@ -612,4 +613,8 @@ Route::middleware(['auth:sanctum-client'])->prefix('topup')->name('topup.')->gro
     Route::post('/exchange', [TopupController::class, 'exchange']);
 
     Route::post('/create-request', [TopupController::class, 'createRequest']);
+    Route::get('/details/{id?}', [TopupController::class, 'show']);
+});
+Route::prefix('webhook')->name('webhook.')->group(function () {
+   Route::post('topup-sepay', [TopupController::class, 'webhookSepay']);
 });

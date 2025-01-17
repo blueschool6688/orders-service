@@ -79,6 +79,10 @@
         "point_exchange_rate": "Point exchange rate"
     },
     "label": {
+        "payment_success": "Payment Success",
+        "scan_to_pay": "Scan to pay",
+        "qr_code": "Qr Code",
+        "payment_details": "Payment Details",
         "selected_package": "Selected Package",
         "payment_amount": "Payment Amount",
         "total_payment": "Total payment",

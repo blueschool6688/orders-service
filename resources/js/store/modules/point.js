@@ -4,11 +4,15 @@ import clientAxios from "../../config/clientAxios";
 export const point = {
     namespaced: true,
     state:{
-        settings:[]
+        settings:[],
+        details:[]
     },
     getters:{
         settings:function (state){
             return state.settings;
+        },
+        details: function (state) {
+            return state.details
         }
     },
     actions:{
@@ -47,10 +51,22 @@ export const point = {
                 })
             })
         },
-        createRequest:function(content,payload){
+        createRequest:function(context,payload){
             return new Promise((resolve, reject)=>{
                 clientAxios.post("/topup/create-request",payload)
                     .then(res => {
+                        resolve(res)
+                    })
+                    .catch(err =>{
+                        reject(err)
+                    })
+            })
+        },
+        details: function(context,payload){
+            return new Promise((resolve, reject)=>{
+                clientAxios.get(`/topup/details/${payload.id}`).
+                    then(res =>{
+                        context.commit('details',res.data.data)
                         resolve(res)
                     })
                     .catch(err =>{
@@ -62,6 +78,9 @@ export const point = {
     mutations:{
         settings:function(state, payload){
             state.settings = payload;
+        },
+        details: function (state, payload){
+            state.details = payload;
         }
     }
 }

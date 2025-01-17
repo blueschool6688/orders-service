@@ -231,7 +231,7 @@ export default {
                     const formData = new FormData();
                     formData.append("image", this.$refs.imageProperty.files[0]);
                     this.$store
-                        .dispatch("customer/changeImage", {
+                        .dispatch("frontendEditProfile/clientChangeImage", {
                             id: this.customerId,
                             form: formData,
                         })

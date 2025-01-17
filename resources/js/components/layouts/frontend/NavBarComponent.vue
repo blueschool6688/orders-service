@@ -376,12 +376,12 @@ export default {
                     const formData = new FormData();
                     formData.append("image", this.$refs.imageProperty.files[0]);
                     this.$store
-                        .dispatch("customer/changeImage", {
+                        .dispatch("frontendEditProfile/clientChangeImage", {
                             id: this.clientInfo.id,
                             form: formData,
                         })
                         .then((res) => {
-                            this.$store.dispatch('updateClientInfo', res.data).then(res => {
+                            this.$store.dispatch('updateClientInfo', res.data.data).then(res => {
                                 this.loading.isActive = false;
                                 alertService.success(this.$t("message.photo_update"));
                                 this.$refs.imageProperty.value = null;

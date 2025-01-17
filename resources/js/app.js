@@ -46,8 +46,10 @@ const PUSHER_HOST = ENV.PUSHER_HOST
 const PUSHER_APP_CLUSTER = ENV.PUSHER_APP_CLUSTER
 const PUSHER_PORT = ENV.PUSHER_PORT
 const PUSHER_SCHEME = ENV.PUSHER_SCHEME
-
-
+const BANK_NUMBER = ENV.BANK_NUMBER
+const BANK_NAME = ENV.BANK_NAME
+const BANK_PREFIX = ENV.BANK_PREFIX
+const BANK_CONTENT = ENV.BANK_CONTENT
 axios.defaults.baseURL = API_URL + '/api';
 axios.interceptors.request.use(
     config => {

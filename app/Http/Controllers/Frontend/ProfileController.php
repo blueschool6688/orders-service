@@ -76,4 +76,12 @@ class ProfileController extends Controller
             return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }
     }
+    public function clientChangeImage(ChangeImageRequest $request) : UserResource | \Illuminate\Http\Response | \Illuminate\Contracts\Foundation\Application | \Illuminate\Contracts\Routing\ResponseFactory
+    {
+        try{
+            return new UserResource($this->profileService->changeImage($request));
+        }catch (\Exception $exception){
+            return response(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
+    }
 }

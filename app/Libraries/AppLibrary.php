@@ -365,4 +365,11 @@ class AppLibrary
         }
         return $text;
     }
+    public static function getCodeFromContent($content){
+        $prefix = env('BANK_PREFIX');
+        $pattern = '/' . preg_quote($prefix, '/') . '(\d+)/i';
+        preg_match($pattern, $content, $matches);
+        $result = isset($matches[1]) ? intval($matches[1]) : null;
+        return $result;
+    }
 }

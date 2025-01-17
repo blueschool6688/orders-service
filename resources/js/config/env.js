@@ -8,5 +8,9 @@ const ENV = {
     PUSHER_HOST: process.env.MIX_PUSHER_HOST,
     PUSHER_PORT: process.env.MIX_PUSHER_PORT,
     PUSHER_SCHEME: process.env.MIX_PUSHER_SCHEME,
+    BANK_NUMBER: process.env.MIX_BANK_NUMBER,
+    BANK_NAME: process.env.MIX_BANK_NAME,
+    BANK_PREFIX: process.env.MIX_BANK_PREFIX,
+    BANK_CONTENT: process.env.MIX_BANK_CONTENT,
 };
 export default ENV;

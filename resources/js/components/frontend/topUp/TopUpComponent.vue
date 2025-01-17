@@ -200,6 +200,12 @@ export default {
                 .dispatch("point/createRequest", payload)
                 .then((res) => {
                     alertService.success(res.data?.message)
+                    if (res.data?.data?.id) {
+                        this.$router.push({
+                            name: "client.topup.payment",
+                            params: { id: res.data.data.id },
+                        });
+                    }
                 })
                 .catch((err) => {
                     if (err.response && err.response.data.errors) {

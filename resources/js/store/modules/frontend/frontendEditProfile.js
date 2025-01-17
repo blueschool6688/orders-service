@@ -48,6 +48,21 @@ export const frontendEditProfile = {
                 });
             });
         },
+        clientChangeImage: function(context,payload){
+            return new Promise((resolve, reject)=>{
+                clientAxios.post('profile/client/change-image',payload.form,{
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                ).then((res)=>{
+                    context.commit("profile",res.data.data);
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err);
+                });
+            })
+        },
         changePassword: function (context, payload) {
             return new Promise((resolve, reject) => {
                 axios.put(`/profile/change-password`,payload).then((res) => {
