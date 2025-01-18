@@ -187,6 +187,13 @@ class TopUpController extends Controller
                     'data' => $topUpTransaction,
                 ]);
             }
+            else{
+                File::append($filePath, "Transfer amount does not match total. Request ID: {$requestId}\n");
+                return new JsonResponse([
+                    'status' => false,
+                    'message' => "Transfer amount does not match the total amount.",
+                ]);
+            }
         }catch (Exception $exception){
             DB::rollBack();
             return new JsonResponse([

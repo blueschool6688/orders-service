@@ -79,6 +79,7 @@
         "point_exchange_rate": "Tỉ giá quy đổi điểm"
     },
     "label": {
+        "point_payment": "Thanh toán bằng điểm",
         "payment_success": "Thanh toán thành công",
         "scan_to_pay": "Quét để thanh toán",
         "payment_details": "Thông tin thanh toán",
@@ -684,6 +685,7 @@
         "something_wrong": "Có gì đó chưa đúng"
     },
     "message": {
+        "please_choose_payment_method": "Vui lòng chọn phương thức thanh toán",
         "pagination_label": "Hiển thị {from} đến {to} trong tổng số {total} mục",
         "password_update": "Mật khẩu đã được cập nhật thành công.",
         "photo_update": "Ảnh đã được cập nhật thành công.",

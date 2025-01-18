@@ -29,11 +29,11 @@
                             </li>
                             <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
-                                    <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
+                                    <input type="radio" id="point" v-model="paymentMethod" value="pointPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
-                                <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
+                                <label for="point" class="db-field-label text-heading">{{ $t('label.point_payment') }}</label>
                             </li>
                         </ul>
                     </div>
@@ -108,9 +108,12 @@
                                             {{ $t('label.subtotal') }}
                                         </span>
                                         <span class="text-sm leading-6 capitalize">
-                                            {{
-                                                currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
-                                            }}
+                                            <template v-if="paymentMethod === 'pointPayment'">
+                                                {{ checkoutProps.form.point }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                                            </template>
+                                            <template v-else>
+                                                {{ currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
+                                            </template>
                                         </span>
                                     </li>
                                 </ul>
@@ -119,15 +122,16 @@
                                         {{ $t('label.total') }}
                                     </h4>
                                     <h5 class="text-sm leading-6 font-semibold capitalize">
-                                        {{
-                                            currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
-                                        }}
+                                        <template v-if="paymentMethod === 'pointPayment'">
+                                            {{ checkoutProps.form.point }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                                        </template>
+                                        <template v-else>
+                                            {{ currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
+                                        </template>
                                     </h5>
                                 </div>
                             </div>
-                            <button type="button"
-                                    class="block md:hidden w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary"
-                                    @click="orderSubmit">
+                            <button type="button" class="block md:hidden w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary" :disabled="!paymentMethod" :class="{ 'opacity-50 cursor-not-allowed': !paymentMethod }" @click="orderSubmit">
                                 {{ $t('button.place_order') }}
                             </button>
                         </div>
@@ -173,8 +177,10 @@ export default {
                     order_type: OrderTypeEnum.DINING_TABLE,
                     is_advance_order: IsAdvanceOrderEnum.NO,
                     source: sourceEnum.WEB,
+                    frontend_payment_method: null,
                     address_id: null,
-                    items: []
+                    items: [],
+                    point:0
                 }
             },
         }
@@ -183,6 +189,9 @@ export default {
         if (this.$store.getters['tableCart/lists'].length === 0) {
             this.$router.push({name: 'table.menu.table', params: {slug: this.$route.params.slug}});
         }
+
+        this.calculatePoints();
+        this.checkoutProps.form.customer_id = this.clientInfo.id || 3
     },
     computed: {
         setting: function () {
@@ -196,19 +205,27 @@ export default {
         },
         table: function () {
             return this.$store.getters['tableCart/table'];
-        }
+        },
+        clientInfo: function(){
+            return this.$store.getters.clientInfo
+        },
     },
     methods: {
         currencyFormat: function (amount, decimal, currency, position) {
             return appService.currencyFormat(amount, decimal, currency, position);
         },
         orderSubmit: function () {
+            if (!this.paymentMethod) {
+                alertService.info(this.$t('message.please_choose_payment_method'))
+                return;
+            }
             this.loading.isActive = true;
             this.checkoutProps.form.dining_table_id = this.table.id;
             this.checkoutProps.form.branch_id = this.table.branch_id;
             this.checkoutProps.form.subtotal  = this.subtotal;
             this.checkoutProps.form.total     = parseFloat(this.subtotal).toFixed(this.setting.site_digit_after_decimal_point);
             this.checkoutProps.form.items     = [];
+            this.checkoutProps.form.frontend_payment_method = this.paymentMethod
             _.forEach(this.carts, (item, index) => {
                 let item_variations = [];
                 if (Object.keys(item.item_variations.variations).length > 0) {
@@ -284,6 +301,13 @@ export default {
                         alertService.error(error[0]);
                     });
                 }
+            })
+        },
+        calculatePoints:function(){
+            this.$store.dispatch('point/changeToPoint', { price: this.subtotal }).then(res => {
+                this.checkoutProps.form.point = res.data?.point || 0
+            }).catch(err =>{
+                console.log(err)
             })
         }
     }

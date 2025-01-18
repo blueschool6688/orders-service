@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 
 use App\Enums\Status;
 use App\Libraries\AppLibrary;
+use App\Models\PointExchangeRate;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,10 +24,11 @@ class NormalItemResource extends JsonResource
             "id"             => $this->id,
             "name"           => $this->name,
             "slug"           => $this->slug,
-            "flat_price"     => AppLibrary::flatAmountFormat($this->price),
-            "convert_price"  => AppLibrary::convertAmountFormat($this->price),
-            "currency_price" => AppLibrary::currencyAmountFormat($this->price),
-            "price"          => $this->price,
+            "flat_price"     => AppLibrary::flatAmountFormat($this->price??0),
+            "convert_price"  => AppLibrary::convertAmountFormat($this->price??0),
+            "currency_price" => AppLibrary::currencyAmountFormat($this->price??0),
+            "point_price"    => PointExchangeRate::exchangeToPoint($this->price??0),
+            "price"          => $this->price??0,
             "item_type"      => $this->item_type,
             "status"         => $this->status,
             "description"    => $this->description === null ? '' : $this->description,
@@ -51,6 +53,7 @@ class NormalItemResource extends JsonResource
                         $offer->currency_price = AppLibrary::currencyAmountFormat(
                             $price - ($price / 100 * $offer->amount)
                         );
+                        $offer->point_price = PointExchangeRate::exchangeToPoint($offer->amount);
                         return $offer;
                     }
                 })

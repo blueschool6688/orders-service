@@ -47,4 +47,22 @@ class PointExchangeController extends Controller
             'rate' => $exchangeRate->rate,
         ],200);
     }
+
+    public function changeToPoint(Request $request) : JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+           'price'=>'required|numeric|min:1',
+        ]);
+        if ($validator->fails()) {
+            return new JsonResponse([
+                'errors' => $validator->errors(),
+            ],422);
+        }
+        $price = $request->input('price') ?? 0;
+
+        $point = PointExchangeRate::exchangeToPoint($price);
+        return new JsonResponse([
+            'point'=>$point,
+        ]);
+    }
 }

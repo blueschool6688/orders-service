@@ -41,7 +41,8 @@ class TableOrderRequest extends FormRequest
             'address_id'       => request('order_type') === OrderType::DELIVERY ? ['required', 'numeric'] : ['nullable'],
             'delivery_time'    => request('order_type') === OrderType::DELIVERY ? ['required', 'string'] : ['nullable'],
             'source'           => ['required', 'numeric'],
-            'items'            => ['required', 'json', new ValidJsonOrder]
+            'items'            => ['required', 'json', new ValidJsonOrder],
+            'frontend_payment_method' => ['nullable'],
         ];
     }
 

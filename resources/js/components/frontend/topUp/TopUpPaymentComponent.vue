@@ -94,9 +94,7 @@ export default {
             const userId = profile.id ?? "#";
             window.Echo.channel(`updateUserPoint-${userId}`).listen(".updateUserPoint", (event) => {
                 this.$store.dispatch("updateClientInfo", event);
-                if (this.paymentDetails && this.paymentDetails.id === event.id) {
                     this.paymentDetails.status = "success";
-                }
             });
         },
     },

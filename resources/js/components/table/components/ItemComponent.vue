@@ -15,13 +15,24 @@
                     {{ textShortener(item.description, 65) }}
                 </p>
                 <div class="product-card-list-footer-group">
-                    <div class="product-card-list-price-group">
-                        <del v-if="item.offer.length > 0" class="product-card-grid-price-previous">
-                            {{ item.currency_price }}
-                        </del>
-                        <h4 class="product-card-list-price-current">
-                            {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
-                        </h4>
+                    <div class="product-card-list-price-group flex flex-col justify-center items-start">
+                        <div>
+                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous">
+                                {{ item.currency_price }}
+                            </del>
+                            <h4 class="product-card-list-price-current">
+                                {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
+                            </h4>
+                        </div>
+                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>
+                        <div>
+                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">
+                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                            </del>
+                            <h4 class="product-card-list-price-current price-point">
+                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                            </h4>
+                        </div>
                     </div>
                     <button @click.prevent="variationModalShow(item)" data-modal="#item-variation-modal"
                         class="product-card-list-cart-btn add-btn">
@@ -46,12 +57,23 @@
                 <p class="product-card-grid-describe char-limit">{{ textShortener(item.description, 75) }}</p>
                 <div class="product-card-grid-footer-group">
                     <div class="product-card-grid-price-group">
-                        <del v-if="item.offer.length > 0" class="product-card-grid-price-previous">
-                            {{ item.currency_price }}
-                        </del>
-                        <h4 class="product-card-grid-price-current">
-                            {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
-                        </h4>
+                        <div>
+                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous">
+                                {{ item.currency_price }}
+                            </del>
+                            <h4 class="product-card-grid-price-current">
+                                {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
+                            </h4>
+                        </div>
+                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>
+                        <div>
+                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">
+                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                            </del>
+                            <h4 class="product-card-list-price-current price-point">
+                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                            </h4>
+                        </div>
                     </div>
                     <button @click.prevent="variationModalShow(item)" data-modal="#item-variation-modal"
                         class="product-card-grid-cart-btn add-btn">
@@ -220,7 +242,7 @@
                                                         {{ textShortener(variation.name, 8) }}, &nbsp;
                                                     </span>
                                                 </p>
-                                                <span 
+                                                <span
                                                 class="block text-xs font-semibold text-heading ltr:text-left rtl:text-right">
                                                     {{ addon.total_currency_price }}
                                                 </span>
@@ -319,6 +341,7 @@ export default {
                 discount: 0,
                 currency_price: 0,
                 convert_price: 0,
+                point_price:0,
                 item_variations: {
                     variations: {},
                     names: {}
@@ -390,6 +413,7 @@ export default {
             this.temp.discount = 0;
             this.temp.convert_price = item.offer.length > 0 ? item.offer[0].convert_price : item.convert_price;
             this.temp.currency_price = item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price;
+            this.temp.point_price = item.offer.length > 0 ? item.offer[0].point_price : item.point_price;
             this.temp.total_price = (item.offer.length > 0 ? item.offer[0].convert_price : item.convert_price) + this.temp.item_variation_total;
 
             const modalTarget = this.$refs.itemVariationModal;
@@ -591,6 +615,7 @@ export default {
                     discount: this.temp.discount,
                     currency_price: this.temp.currency_price,
                     convert_price: this.temp.convert_price,
+                    point_price: this.temp.point_price,
                     item_variations: this.temp.item_variations,
                     item_extras: this.temp.item_extras,
                     item_variation_total: this.temp.item_variation_total,

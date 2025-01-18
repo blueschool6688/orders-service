@@ -30,4 +30,18 @@ class PointExchangeRate extends Model
 
         return ($points * $rate) / $unit;
     }
+    public static function exchangeToPoint(int $price){
+        if($price < 0 || !is_numeric($price)){
+            return 0;
+        }
+        $currentRate = self::latest()->first();
+        if (!$currentRate) {
+            Log::error('Exchange rate not configured');
+            return 0;
+        }
+        $rate = $currentRate->rate??1;
+        $unit = $currentRate->unit??1;
+
+        return ($price * $unit) / $rate;
+    }
 }

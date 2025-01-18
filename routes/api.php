@@ -618,3 +618,6 @@ Route::middleware(['auth:sanctum-client'])->prefix('topup')->name('topup.')->gro
 Route::prefix('webhook')->name('webhook.')->group(function () {
    Route::post('topup-sepay', [TopupController::class, 'webhookSepay']);
 });
+Route::prefix('point')->name('point.')->group(function () {
+    Route::post('change-to-point',[PointExchangeController::class,'changeToPoint']);
+});

@@ -27,6 +27,7 @@ class FrontendOrder extends Model
         'preparation_time',
         'is_advance_order',
         'address',
+        'frontend_payment_method',
         'payment_method',
         'payment_status',
         'status',

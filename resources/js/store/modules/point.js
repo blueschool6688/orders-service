@@ -51,6 +51,18 @@ export const point = {
                 })
             })
         },
+        changeToPoint: function (context,payload){
+          return new Promise((resolve, reject)=>{
+              let url = 'point/change-to-point'
+
+              clientAxios.post(url,payload).then(res => {
+                  resolve(res)
+              })
+              .catch(err => {
+                  reject(err)
+              })
+          })
+        },
         createRequest:function(context,payload){
             return new Promise((resolve, reject)=>{
                 clientAxios.post("/topup/create-request",payload)

@@ -79,6 +79,7 @@
         "point_exchange_rate": "Point exchange rate"
     },
     "label": {
+        "point_payment": "Point payment",
         "payment_success": "Payment Success",
         "scan_to_pay": "Scan to pay",
         "qr_code": "Qr Code",
@@ -685,6 +686,7 @@
         "something_wrong": "Something Wrong."
     },
     "message": {
+        "please_choose_payment_method": "Please choose payment method",
         "pagination_label": "Showing {from} to {to} of {total} entries",
         "password_update": "Password Updated Successfully.",
         "photo_update": "Photo Updated Successfully.",
