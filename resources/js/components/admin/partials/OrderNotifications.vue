@@ -39,13 +39,19 @@
                     </ul>
                 </div>
                 <div class="flex justify-end space-x-2 mt-4">
-                    <button type="button" @click="orderReasonModal" data-modal="#orderReasonModal" class="flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">
-                        <i class="lab lab-close"></i>
-                        <span class="text-sm capitalize">{{ $t("button.reject") }}</span>
-                    </button>
-                    <button type="button" class="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg" @click="changeStatus(enums.orderStatusEnum.ACCEPT)">
-                        <i class="lab lab-save"></i>
-                        <span class="text-sm capitalize text-white">{{ $t("button.accept") }}</span>
+                    <template  v-if="this.authInfo.role_id === 4" >
+                        <button type="button" @click="orderReasonModal" data-modal="#orderReasonModal" class="flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">
+                            <i class="lab lab-close"></i>
+                            <span class="text-sm capitalize">{{ $t("button.reject") }}</span>
+                        </button>
+                        <button type="button" class="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg" @click="changeStatus(enums.orderStatusEnum.ACCEPT)">
+                            <i class="lab lab-save"></i>
+                            <span class="text-sm capitalize text-white">{{ $t("button.accept") }}</span>
+                        </button>
+                    </template>
+                    <button type="button" v-else class="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg" @click="redirectToOrder(order_id)">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>{{ $t("button.view") }}</span>
                     </button>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                         </div>
                         <div class="form-col-12">
                             <div class="modal-btns">
-                                <button type="button" class="modal-btn-outline modal-close" @click.prevent="resetModal">
+                                <button type="button" class="modal-btn-outline modal-close" @click.prevent="resetOrderReasonModal">
                                     <i class="lab lab-close"></i>
                                     <span>{{ $t("button.close") }}</span>
                                 </button>
@@ -170,13 +176,18 @@ export default {
         };
     },
     mounted() {
-        if (!this.visible){
-            this.listenForOrders();
+        if (this.authInfo.role_id === 4 || this.authInfo.role_id === 1 || this.authInfo.role_id === 3){
+            if (!this.visible){
+                this.listenForOrders();
+            }
         }
     },
     computed:{
         setting: function () {
             return this.$store.getters['frontendSetting/lists'];
+        },
+        authInfo: function () {
+            return this.$store.getters.authInfo;
         },
     },
     methods: {
@@ -215,6 +226,8 @@ export default {
                 alertService.error(this.$t("message.order_id_missing"));
                 return;
             }
+            this.visible = false;
+            this.loading.isActive = false;
             this.$router.push({
                 name: "admin.table.order.show",
                 params: { id: order_id },
@@ -235,6 +248,13 @@ export default {
                             this.loading.isActive = false;
                             alertService.successFlip(1, this.$t("label.status"));
                             // redirect tới đơn hàng
+                            this.$store.dispatch('tableOrder/pendingOrders')
+                                .then(res => {
+                                    console.log(res)
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                })
                             this.redirectToOrder(this.order_id)
                         })
                         .catch((err) => {

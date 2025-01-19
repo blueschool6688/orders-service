@@ -1,4 +1,5 @@
 import axios from 'axios'
+import clientAxios from "../../../config/clientAxios";
 
 
 export const tableDiningOrder = {
@@ -26,7 +27,7 @@ export const tableDiningOrder = {
     actions: {
         save: function (context, payload) {
             return new Promise((resolve, reject) => {
-                axios.post("table/dining-order", payload).then((res) => {
+                clientAxios.post("table/dining-order", payload).then((res) => {
                     resolve(res);
                 }).catch((err) => {
                     reject(err);

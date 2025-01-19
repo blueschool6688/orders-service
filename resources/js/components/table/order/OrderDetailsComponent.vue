@@ -52,7 +52,7 @@
                                     {{ order.transaction.payment_method }} ({{ order.transaction.transaction_no }})
                                 </span>
                                 <span v-else class="capitalize text-sm leading-6 text-heading">
-                                    {{ enums.paymentTypeEnumArray[order.payment_method] }}
+                                    {{ enums.frontendPaymentMethodArray[order.frontend_payment_method] }}
                                 </span>
                             </li>
                             <li class="flex items-center gap-2">
@@ -130,8 +130,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <OrderReceiptComponent :order="order" :orderBranch="orderBranch" :orderItems="orderItems" />
+<!--                    <div class="p-4">-->
+<!--                        <OrderReceiptComponent :order="order" :orderBranch="orderBranch" :orderItems="orderItems" />-->
+<!--                    </div>-->
+                    <div class="p-4" v-if="order.frontend_payment_method === 'cashCard'">
+                        <OrderPaymentCashCardComponent :order="order" />
                     </div>
                 </div>
             </div>
@@ -148,10 +151,11 @@ import orderStatusEnum from "../../../enums/modules/orderStatusEnum";
 import paymentStatusEnum from "../../../enums/modules/paymentStatusEnum";
 import paymentTypeEnum from "../../../enums/modules/paymentTypeEnum";
 import activityEnum from "../../../enums/modules/activityEnum";
-
+import frontendPaymentMethodEnum from "../../../enums/modules/frontendPaymentMethodEnum";
+import OrderPaymentCashCardComponent from "./OrderPaymentCashCardComponent.vue";
 export default {
     name : "OrderDetailsComponent",
-    components: {OrderReceiptComponent, OrderStatusComponent, LoadingComponent},
+    components: {OrderReceiptComponent,OrderPaymentCashCardComponent, OrderStatusComponent, LoadingComponent},
     data() {
         return {
             loading: {
@@ -175,12 +179,19 @@ export default {
                     [paymentTypeEnum.E_WALLET]: this.$t("label.e_wallet"),
                     [paymentTypeEnum.PAYPAL]: this.$t("label.paypal")
                 },
+                frontendPaymentMethodArray: {
+                    [frontendPaymentMethodEnum.cashCard]: this.$t("label.cash_card"),
+                    [frontendPaymentMethodEnum.pointPayment]: this.$t("label.point_payment")
+                }
             }
         }
     },
     computed: {
         setting: function () {
             return this.$store.getters['frontendSetting/lists'];
+        },
+        language: function () {
+            return this.$store.getters['frontendLanguage/show'];
         },
         order: function () {
             return this.$store.getters['tableDiningOrder/show'];
@@ -194,6 +205,20 @@ export default {
     },
     mounted() {
         this.loading.isActive = true;
+        this.$store.dispatch('frontendSetting/lists').then(res => {
+            this.defaultLanguage = res.data.data.site_default_language;
+            const globalState = this.$store.getters['globalState/lists'];
+
+            if (globalState.language_id > 0) {
+                this.defaultLanguage = globalState.language_id;
+            }
+            this.$store.dispatch('frontendLanguage/show', this.defaultLanguage).then(res => {
+                this.$i18n.locale = res.data.data.code;
+                this.$store.dispatch("globalState/init", {
+                    language_code: res.data.data.code
+                });
+            }).catch();
+        }).catch();
         if (this.$route.params.id) {
             this.loading.isActive = true;
             this.$store.dispatch("tableDiningOrder/show", this.$route.params.id).then(res => {

@@ -35,6 +35,11 @@ class TableOrderController extends AdminController
     public function index(PaginateRequest $request): \Illuminate\Http\Response | \Illuminate\Http\Resources\Json\AnonymousResourceCollection | \Illuminate\Contracts\Foundation\Application | \Illuminate\Contracts\Routing\ResponseFactory
     {
         try {
+            if ($request->count == 1){
+
+                $count = $this->orderService->list($request);
+                return response(['status' => true, 'count' => $count], 200);
+            }
             return OrderResource::collection($this->orderService->list($request));
         } catch (Exception $exception) {
             return response(['status' => false, 'message' => $exception->getMessage()], 422);

@@ -67,7 +67,7 @@
                     </ul>
                 </div>
 
-                <div class="flex flex-wrap gap-3" v-if="order.status === enums.orderStatusEnum.PENDING">
+                <div class="flex flex-wrap gap-3" v-if="order.status === enums.orderStatusEnum.PENDING  && isAdminOrKitchen">
                     <TableOrderReasonComponent />
                     <button type="button" @click="changeStatus(enums.orderStatusEnum.ACCEPT)"
                         class="flex items-center justify-center text-white gap-2 px-4 h-[38px] rounded shadow-db-card bg-[#2AC769]">
@@ -78,12 +78,12 @@
 
                 <div class="flex flex-wrap gap-3" v-else-if="order.status !== enums.orderStatusEnum.REJECTED &&
                     order.status !== enums.orderStatusEnum.CANCELED
-                    ">
-                    <div class="relative" v-if="!order.token">
-                        <TableOrderTokenComponent />
-                    </div>
+">
+<!--                    <div class="relative" v-if="!order.token">-->
+<!--                        <TableOrderTokenComponent />-->
+<!--                    </div>-->
 
-                    <div v-if="order.transaction === null" class="relative">
+                    <div v-if="order.transaction === null  && isAdminOrPos" class="relative">
                         <select v-model="payment_status" @change="changePaymentStatus($event)"
                             class="text-sm capitalize appearance-none pl-4 pr-10 h-[38px] rounded border border-primary bg-white text-primary">
                             <option v-for="paymentStatus in enums.paymentStatusObject" :value="paymentStatus.value">
@@ -93,19 +93,22 @@
                         <i
                             class="lab lab-arrow-down-2 lab-font-size-16 absolute top-1/2 right-3.5 -translate-y-1/2 text-primary"></i>
                     </div>
-
-                    <div class="relative">
-                        <select v-model="order_status" @change="orderStatus($event)"
-                            class="text-sm capitalize appearance-none pl-4 pr-10 h-[38px] rounded border border-primary bg-white text-primary">
-                            <option v-for="orderStatus in enums.orderStatusObject" :value="orderStatus.value">
-                                {{ orderStatus.name }}
-                            </option>
-                        </select>
-                        <i
-                            class="lab lab-arrow-down-2 lab-font-size-16 absolute top-1/2 right-3.5 -translate-y-1/2 text-primary"></i>
-                    </div>
-
-                    <TableOrderReceiptComponent :order="order" :orderItems="orderItems" :orderUser="orderUser" />
+                    <TableOrderReceiptComponent v-if="isAdminOrPos" :order="order" :orderItems="orderItems" :orderUser="orderUser" />
+                </div>
+            </div>
+        </div>
+        <div class="db-card p-4">
+            <div class="flex flex-wrap gap-y-5 items-center justify-center">
+                <div class="col-12 sm:col-4" v-if="isAdminOrKitchen">
+<!--                                            <select v-model="order_status" @change="orderStatus($event)"-->
+<!--                                                class="text-sm capitalize appearance-none pl-4 pr-10 h-[38px] rounded border border-primary bg-white text-primary">-->
+<!--                                                <option v-for="orderStatus in enums.orderStatusObject" :value="orderStatus.value">-->
+<!--                                                    {{ orderStatus.name }}-->
+<!--                                                </option>-->
+<!--                                            </select>-->
+<!--                                            <i-->
+<!--                                                class="lab lab-arrow-down-2 lab-font-size-16 absolute top-1/2 right-3.5 -translate-y-1/2 text-primary"></i>-->
+                    <OrderStatusComponent :props="order" :orderStatus="orderStatus"/>
                 </div>
             </div>
         </div>
@@ -256,14 +259,15 @@ import alertService from "../../../services/alertService";
 import TableOrderReasonComponent from "./TableOrderReasonComponent";
 import TableOrderTokenComponent from "./TableOrderTokenComponent";
 import TableOrderReceiptComponent from "./TableOrderReceiptComponent";
-
+import OrderStatusComponent from "../components/OrderStatusComponent.vue";
 export default {
     name: "tableOrderShowComponent",
     components: {
         TableOrderReceiptComponent,
         LoadingComponent,
         TableOrderReasonComponent,
-        TableOrderTokenComponent
+        TableOrderTokenComponent,
+        OrderStatusComponent
     },
     data() {
         return {
@@ -333,6 +337,15 @@ export default {
         orderUser: function () {
             return this.$store.getters["tableOrder/orderUser"];
         },
+        authInfo: function () {
+            return this.$store.getters.authInfo;
+        },
+        isAdminOrPos() {
+            return this.authInfo.role_id === 1 || this.authInfo.role_id === 3;
+        },
+        isAdminOrKitchen(){
+            return this.authInfo.role_id === 1 || this.authInfo.role_id === 4;
+        }
     },
     mounted() {
         this.loading.isActive = true;
@@ -410,13 +423,13 @@ export default {
                 alertService.error(err.response.data.message);
             }
         },
-        orderStatus: function (e) {
+        orderStatus: function (status) {
             try {
                 this.loading.isActive = true;
                 this.$store
                     .dispatch("tableOrder/changeStatus", {
                         id: this.$route.params.id,
-                        status: e.target.value,
+                        status: status,
                     })
                     .then((res) => {
                         this.loading.isActive = false;

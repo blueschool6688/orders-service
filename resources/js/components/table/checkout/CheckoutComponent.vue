@@ -27,7 +27,8 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <li class="flex items-center gap-1.5">
+<!--                            POINT PAYMENT -->
+                            <li v-if="clientLogged" class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="point" v-model="paymentMethod" value="pointPayment"
                                            class="custom-radio-field">
@@ -163,11 +164,11 @@ export default {
                 isActive: false,
             },
             placeOrderShow: false,
-            paymentMethod: null,
+            paymentMethod: "cashCard",
             checkoutProps: {
                 form: {
                     dining_table_id: null,
-                    customer_id: 3,
+                    customer_id: 2,
                     branch_id: null,
                     subtotal: 0,
                     discount: 0,
@@ -191,7 +192,11 @@ export default {
         }
 
         this.calculatePoints();
-        this.checkoutProps.form.customer_id = this.clientInfo.id || 3
+        this.checkoutProps.form.customer_id = this.clientInfo.id || 2
+
+        if (this.clientLogged){
+            this.socketUpdatePoint()
+        }
     },
     computed: {
         setting: function () {
@@ -209,6 +214,9 @@ export default {
         clientInfo: function(){
             return this.$store.getters.clientInfo
         },
+        clientLogged: function (){
+            return this.$store.getters.clientStatus;
+        }
     },
     methods: {
         currencyFormat: function (amount, decimal, currency, position) {
@@ -301,6 +309,9 @@ export default {
                         alertService.error(error[0]);
                     });
                 }
+                else if(err.response.data.status === false){
+                    alertService.error(err?.response?.data?.message)
+                }
             })
         },
         calculatePoints:function(){
@@ -309,7 +320,15 @@ export default {
             }).catch(err =>{
                 console.log(err)
             })
-        }
+        },
+        socketUpdatePoint() {
+            const profile = this.clientInfo;
+            const userId = profile.id ?? "#";
+            window.Echo.channel(`updateUserPoint-${userId}`).listen(".updateUserPoint", (event) => {
+                this.$store.dispatch("updateClientInfo", event);
+                this.paymentDetails.status = "success";
+            });
+        },
     }
 
 }

@@ -76,6 +76,7 @@
         "home": "Trang chủ",
         "dining_tables": "Bàn ăn",
         "table_orders": "Đơn hàng tại bàn",
+        "table-orders": "Đơn hàng tại bàn",
         "point_exchange_rate": "Tỉ giá quy đổi điểm"
     },
     "label": {
@@ -140,7 +141,7 @@
         "app_debug": "Gỡ lỗi ứng dụng",
         "enable": "Bật",
         "disable": "Tắt",
-        "delivered": "Đã giao hàng",
+        "delivered": "Đã hoàn thành",
         "rejected": "Bị từ chối",
         "delivery": "Giao hàng",
         "takeaway": "Mang đi",
@@ -385,7 +386,7 @@
         "got_your_order": "Đã nhận đơn hàng của bạn, {name}!",
         "your_order": "Đơn hàng của bạn là {order}",
         "estimated_delivery_time": "Thời gian giao hàng ước tính",
-        "your_order_has_been_delivered": "Đơn hàng của bạn đã được giao",
+        "your_order_has_been_delivered": "Đơn hàng đã hoàn thành",
         "forget_password": "Quên mật khẩu",
         "verify_email": "Xác minh email",
         "create_new_password": "Tạo mật khẩu mới",
@@ -685,6 +686,7 @@
         "something_wrong": "Có gì đó chưa đúng"
     },
     "message": {
+        "order_ready": "Đơn hàng đã sẵn sàng",
         "please_choose_payment_method": "Vui lòng chọn phương thức thanh toán",
         "pagination_label": "Hiển thị {from} đến {to} trong tổng số {total} mục",
         "password_update": "Mật khẩu đã được cập nhật thành công.",

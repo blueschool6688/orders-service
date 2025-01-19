@@ -6,7 +6,7 @@
         </router-link>
         <div class="flex items-center justify-end w-full gap-4">
             <div
-                class="sub-header flex items-center gap-4 transition xh:justify-between xh:fixed xh:left-0 xh:w-full xh:p-4 xh:border-y xh:border-[#EFF0F6] xh:bg-white">
+                class="sub-header flex items-center gap-4 transition xh:justify-end xh:fixed xh:left-0 xh:w-full xh:p-4 xh:border-y xh:border-[#EFF0F6] xh:bg-white">
                 <div v-if="authBranch === 0" class="relative dropdown-group">
                     <button class="flex items-center text-left gap-2 dropdown-btn">
                         <i class="lab lab-shop lab-font-size-24 font-fill-primary"></i>
@@ -48,7 +48,22 @@
                             </li>
                         </ul>
                     </div>
-
+                    <router-link :to="{ name: 'admin.table.order.list' }" class="relative">
+                        <div
+                            :class="[
+                                'w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer',
+                                pendingOrder > 0 ? 'bg-primary text-white' : 'bg-gray-300'
+                            ]"
+                        >
+                            <i class="fa-regular fa-bell"></i>
+                        </div>
+                        <div
+                            v-if="pendingOrder > 0"
+                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                        >
+                            {{ pendingOrder }}
+                        </div>
+                    </router-link>
                     <router-link v-if="pos.permission"
                         class="w-9 h-9 rounded-lg flex items-center justify-center bg-[#FFEBD8]"
                         :to="{ path: '/admin/' + pos.url }">
@@ -197,6 +212,9 @@ export default {
         },
         permissions: function () {
             return this.$store.getters.authPermission;
+        },
+        pendingOrder: function(){
+            return this.$store.getters['tableOrder/pendingOrders'];
         }
     },
     mounted() {
@@ -211,9 +229,8 @@ export default {
         this.orderPermissionCheck();
         this.posPermissionCheck();
 
-
-
-
+        this.fetchPendingOrders();
+        this.socketTableOrderCreated()
         this.$store.dispatch('frontendSetting/lists').then(res => {
             this.defaultLanguage = res.data.data.site_default_language;
             const globalState = this.$store.getters['globalState/lists'];
@@ -234,7 +251,9 @@ export default {
             this.loading.isActive = false;
         });
 
-
+        setInterval(()=>{
+            this.fetchPendingOrders()
+        },10000)
 
         window.setTimeout(() => {
             if (this.$store.getters.authStatus && this.setting.notification_fcm_api_key && this.setting.notification_fcm_auth_domain && this.setting.notification_fcm_project_id && this.setting.notification_fcm_storage_bucket && this.setting.notification_fcm_messaging_sender_id && this.setting.notification_fcm_app_id && this.setting.notification_fcm_measurement_id) {
@@ -363,6 +382,22 @@ export default {
             this.loading.isActive = false;
             this.orderNotificationStatus = false;
         },
+        fetchPendingOrders:function(){
+            this.$store.dispatch('tableOrder/pendingOrders')
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        socketTableOrderCreated:function(){
+            window.Echo.channel('table-order-created')
+                .listen('.TableOrderCreated',(event) =>{
+                    this.fetchPendingOrders()
+                })
+        },
+
     }
 }
 </script>

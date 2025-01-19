@@ -372,4 +372,11 @@ class AppLibrary
         $result = isset($matches[1]) ? intval($matches[1]) : null;
         return $result;
     }
+    public static function getOrderIdFromContent($content){
+        $prefix = env('CASHCARD_PREFIX');
+        $pattern = '/' . preg_quote($prefix, '/') . '(\d+)/i';
+        preg_match($pattern, $content, $matches);
+        $result = isset($matches[1]) ? intval($matches[1]) : null;
+        return $result;
+    }
 }

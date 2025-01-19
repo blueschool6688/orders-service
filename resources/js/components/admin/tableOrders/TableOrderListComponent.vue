@@ -126,8 +126,16 @@
                             </td>
                             <td class="db-table-body-td hidden-print" v-if="permissionChecker('table-orders')">
                                 <div class="flex justify-start items-center sm:items-start sm:justify-start gap-1.5">
-                                    <SmIconViewComponent :link="'admin.table.order.show'" :id="order.id"
-                                        v-if="permissionChecker('table-orders')" />
+<!--                                    <SmIconViewComponent :link="'admin.table.order.show'" :id="order.id"-->
+<!--                                        v-if="permissionChecker('table-orders')" />-->
+
+                                    <template v-if="permissionChecker('table-orders')">
+                                        <router-link class="db-table-action view
+                                             text-primary hover:text-white border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
+                                            " :to="{ name: 'admin.table.order.show', params: { id: order.id } }">
+                                            <span class="">{{ $t('button.go_to_order') }}</span>
+                                        </router-link>
+                                    </template>
                                 </div>
                             </td>
                         </tr>
@@ -268,6 +276,7 @@ export default {
             order_type: "asc",
             status: statusEnum.ACTIVE,
         });
+        this.socketTableOrderCreated()
     },
     computed: {
         orders: function () {
@@ -357,6 +366,22 @@ export default {
                     alertService.error(err.response.data.message);
                 });
         },
+        refreshList:function(page = 1){
+            this.props.search.page = page;
+            this.$store.dispatch("tableOrder/lists",this.props.search)
+                .then(res =>{
+
+                })
+                .catch(err=>{
+                    console.log("Error realtime list ", err)
+                })
+        },
+        socketTableOrderCreated:function(){
+            window.Echo.channel('table-order-created')
+                .listen('.TableOrderCreated',(event) =>{
+                    this.refreshList()
+                })
+        }
     },
 };
 </script>

@@ -11,6 +11,7 @@ const ENV = {
     BANK_NUMBER: process.env.MIX_BANK_NUMBER,
     BANK_NAME: process.env.MIX_BANK_NAME,
     BANK_PREFIX: process.env.MIX_BANK_PREFIX,
+    CASHCARD_PREFIX: process.env.MIX_CASHCARD_PREFIX,
     BANK_CONTENT: process.env.MIX_BANK_CONTENT,
 };
 export default ENV;

@@ -26,6 +26,7 @@ class OrderDetailsResource extends JsonResource
             "delivery_charge_currency_price"      => AppLibrary::currencyAmountFormat($this->delivery_charge),
             "total_currency_price"                => AppLibrary::currencyAmountFormat($this->total),
             "total_tax_currency_price"            => AppLibrary::currencyAmountFormat($this->total_tax),
+            "total"                               => AppLibrary::convertAmountFormat($this->total ?? 0),
             'order_type'                          => $this->order_type,
             'order_datetime'                      => AppLibrary::datetime($this->order_datetime),
             'order_date'                          => AppLibrary::date($this->order_datetime),
@@ -47,6 +48,7 @@ class OrderDetailsResource extends JsonResource
             'table_name'                          => $this->diningTable?->name,
             'pos_payment_method'                  => $this->pos_payment_method,
             'pos_payment_note'                    => $this->pos_payment_note,
+            'frontend_payment_method'             => $this->frontend_payment_method ?? null
         ];
     }
 }

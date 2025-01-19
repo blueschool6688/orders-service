@@ -17,12 +17,12 @@ export const tableOrder = {
             temp_id: null,
             isEditing: false,
         },
+        pendingOrders:0
     },
     getters: {
         lists: function (state) {
             return state.lists;
         },
-
         pagination: function (state) {
             return state.pagination
         },
@@ -46,6 +46,9 @@ export const tableOrder = {
         },
         temp: function (state) {
             return state.temp;
+        },
+        pendingOrders:function(state){
+            return state.pendingOrders
         }
     },
     actions: {
@@ -67,6 +70,18 @@ export const tableOrder = {
                     reject(err);
                 });
             });
+        },
+        pendingOrders:function(context,payload){
+            return new Promise((resolve, reject)=>{
+                let url = 'admin/table-order?count=1&status=1&order_type=20'
+                axios.get(url).then(res => {
+                    context.commit('pendingOrders',res.data?.count)
+                    resolve(res);
+                })
+                .catch(err =>{
+                    reject(err)
+                })
+            })
         },
         save: function (context, payload) {
             return new Promise((resolve, reject) => {
@@ -141,6 +156,9 @@ export const tableOrder = {
     mutations: {
         lists: function (state, payload) {
             state.lists = payload
+        },
+        pendingOrders:function (state,payload){
+            state.pendingOrders = payload
         },
         pagination: function (state, payload) {
             state.pagination = payload;

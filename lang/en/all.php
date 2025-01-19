@@ -87,6 +87,8 @@ return [
         'time_slot_exist'             => 'Time slots already exist.',
         'resource_already_used'       => 'Cannot remove this resource permanently. It is related with another resource.',
         'phone_or_email_required'     => 'The phone or email is required.',
-        'token_invalid'               => 'Token invalid'
+        'token_invalid'               => 'Token invalid',
+        'customer_not_found'          => 'Customer not found',
+        'point_not_enough'            => 'Your point is not enough',
     ]
 ];

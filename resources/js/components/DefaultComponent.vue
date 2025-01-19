@@ -16,6 +16,7 @@
                 <BackendMenuComponent />
                 <router-view></router-view>
                 <OrderNotifications />
+                <OrderCompletedNotifications />
             </main>
 
             <div v-if="!logged">
@@ -45,7 +46,7 @@ import MainComponent from "./frontend/home/MainComponent.vue";
 
 // ADMIN PARTIALS
 import OrderNotifications from "./admin/partials/OrderNotifications.vue";
-
+import OrderCompletedNotifications from "./admin/partials/OrderCompleteNotifications.vue"
 
 
 import displayModeEnum from "../enums/modules/displayModeEnum";
@@ -67,7 +68,8 @@ export default {
 
         // ADMIN PARTIALS
 
-        OrderNotifications
+        OrderNotifications,
+        OrderCompletedNotifications
 
     },
     data() {

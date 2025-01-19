@@ -76,39 +76,39 @@ export default {
 
     destroyConfirmation: function () {
         return new VueSimpleAlert.confirm(
-            "You will not be able to recover the deleted record!",
-            "Are you sure?",
+            "Dữ liệu sẽ không thể khôi phục dữ liệu này!",
+            "Xác nhận",
             "warning",
             {
-                confirmButtonText: "Yes, Delete it!",
-                cancelButtonText: "No, Cancel!",
-                confirmButtonColor: "#696cff",
+                confirmButtonText: "Xóa",
+                cancelButtonText: "Hủy",
+                confirmButtonColor: "#d1992c",
                 cancelButtonColor: "#8592a3",
             }
         );
     },
     acceptOrder: function () {
         return new VueSimpleAlert.confirm(
-            "You will not be able to cancel the order!",
-            "Are you sure?",
+            "Bạn có muốn nhận đơn hàng này không?",
+            "Xác nhận",
             "warning",
             {
-                confirmButtonText: "Yes, Accept it!",
-                cancelButtonText: "No, Cancel!",
-                confirmButtonColor: "#696cff",
+                confirmButtonText: "Nhận ngay",
+                cancelButtonText: "Từ chối",
+                confirmButtonColor: "#d1992c",
                 cancelButtonColor: "#8592a3",
             }
         );
     },
     cancelOrder: function () {
         return new VueSimpleAlert.confirm(
-            "You will not be able to accept the order!",
-            "Are you sure?",
+            "Bạn sẽ từ chối đơn hàng này?",
+            "Xác nhận",
             "warning",
             {
-                confirmButtonText: "Yes, Cancel it!",
-                cancelButtonText: "No, Cancel",
-                confirmButtonColor: "#696cff",
+                confirmButtonText: "Từ chối",
+                cancelButtonText: "Hủy",
+                confirmButtonColor: "#d1992c",
                 cancelButtonColor: "#8592a3",
             }
         );

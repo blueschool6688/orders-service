@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\OrderPaymentUpdated;
 use App\Events\UpdateUserPoint;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderDetailsResource;
 use App\Http\Resources\UserResource;
 use App\Libraries\AppLibrary;
+use App\Models\Order;
 use App\Models\PointExchangeRate;
 use App\Models\PointTransaction;
 use App\Models\TopUpTransaction;
@@ -189,6 +192,55 @@ class TopUpController extends Controller
             }
             else{
                 File::append($filePath, "Transfer amount does not match total. Request ID: {$requestId}\n");
+                return new JsonResponse([
+                    'status' => false,
+                    'message' => "Transfer amount does not match the total amount.",
+                ]);
+            }
+        }catch (Exception $exception){
+            DB::rollBack();
+            return new JsonResponse([
+                'status'=>false,
+                'message'=>$exception->getMessage(),
+            ]);
+        }
+    }
+
+    public function completeOrder(Request $request) : JsonResponse  |OrderDetailsResource
+    {
+        Log::info('Complete order webhook');
+        $webhookData = $request->all();
+        $logMessage = 'Complete order webhook' .'\n' . json_encode($webhookData, JSON_PRETTY_PRINT);
+        $filePath = storage_path('logs/sepay.txt');
+        File::append($filePath, $logMessage);
+        $code = $webhookData['code'] ?? null;
+        $orderId = AppLibrary::getOrderIdFromContent($code);
+        $transferAmount = $webhookData['transferAmount'] ?? 0;
+        $transactionId = $webhookData['id']??null;
+        try {
+            DB::beginTransaction();
+            $order = Order::find($orderId);
+            if (!$order){
+                $logMessage = "Order Not found with Id ". $orderId;
+                File::append($filePath, $logMessage);
+                return new JsonResponse([
+                    'status' => false,
+                    'message' => $logMessage,
+                ]);
+            }
+            $total = $order->total ?? 0;
+            if ($transferAmount == $total){
+                $order->payment_status = 5;
+                $order->save();
+                event(new OrderPaymentUpdated($order));
+                DB::commit();
+                return new JsonResponse([
+                    'status' => true,
+                    'message' => "Order payment updated successfully.",
+                ]);
+            }
+            else{
+                File::append($filePath, "Transfer amount does not match total. Order ID: {$orderId}\n");
                 return new JsonResponse([
                     'status' => false,
                     'message' => "Transfer amount does not match the total amount.",

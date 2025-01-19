@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
+use App\Events\OrderCompleted;
 use App\Events\OrderPaymentUpdated;
 use App\Events\OrderPlaced;
 use App\Events\OrderStatusUpdated;
+use App\Events\TableOrderCreated;
+use App\Events\UpdateUserPoint;
+use App\Models\PointExchangeRate;
+use App\Models\PointTransaction;
 use Exception;
 use App\Models\Tax;
 use App\Models\Item;
@@ -62,12 +67,14 @@ class OrderService
     {
         try {
             $requests    = $request->all();
-            $method      = $request->get('paginate', 0) == 1 ? 'paginate' : 'get';
-            $methodValue = $request->get('paginate', 0) == 1 ? $request->get('per_page', 10) : '*';
+            $isPaginate  = $request->get('paginate', 0) == 1;
+            $isCount     = $request->get('count', 0) == 1;
+            $method      = $isCount ? 'count' : ($isPaginate ? 'paginate' : 'get');
+            $methodValue = $isPaginate ? $request->get('per_page', 10) : '*';
             $orderColumn = $request->get('order_column') ?? 'id';
             $orderType   = $request->get('order_by') ?? 'desc';
 
-            return Order::with('transaction', 'orderItems')->where(function ($query) use ($requests) {
+            $query = Order::with('transaction', 'orderItems')->where(function ($query) use ($requests) {
                 if (isset($requests['from_date']) && isset($requests['to_date'])) {
                     $first_date = Date('Y-m-d', strtotime($requests['from_date']));
                     $last_date  = Date('Y-m-d', strtotime($requests['to_date']));
@@ -81,7 +88,7 @@ class OrderService
                     if (in_array($key, $this->orderFilter)) {
                         if ($key === "status") {
                             $query->where($key, (int)$request);
-                        }else if($key === 'payment_method' && (int)$request < 0 ) {
+                        } else if ($key === 'payment_method' && (int)$request < 0) {
                             $query->where('pos_payment_method', abs($request));
                         } else {
                             $query->where($key, 'like', '%' . $request . '%');
@@ -97,9 +104,13 @@ class OrderService
                         }
                     }
                 }
-            })->orderBy($orderColumn, $orderType)->$method(
-                $methodValue
-            );
+            });
+
+            if ($isCount) {
+                return $query->count();
+            }
+
+            return $query->orderBy($orderColumn, $orderType)->$method($methodValue);
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception($exception->getMessage(), 422);
@@ -343,6 +354,24 @@ class OrderService
     {
         try {
             DB::transaction(function () use ($request) {
+                $frontendPaymentMethod = $request->frontend_payment_method ?? null;
+                $total = $request->total ?? 0;
+                $customerId = $request->customer_id ?? null;
+                if (!$customerId){
+                    throw new Exception(trans('all.message.customer_not_found'),422);
+                }
+                $user = User::find($customerId);
+                if (!$user){
+                    throw new Exception(trans('all.message.customer_not_found'),422);
+                }
+                if ($frontendPaymentMethod == 'pointPayment'){
+
+                    $currentBalance = $user->balance ?? 0;
+                    $pointChange = PointExchangeRate::exchangeToPoint($total);
+                    if ($pointChange > $currentBalance){
+                        throw new Exception(trans('all.message.point_not_enough'),422);
+                    }
+                }
                 $this->order = FrontendOrder::create(
                     $request->validated() + [
                         'user_id'          => $request->customer_id,
@@ -396,12 +425,32 @@ class OrderService
                 $this->order->order_serial_no = date('dmy') . $this->order->id;
                 $this->order->total_tax       = $totalTax;
                 $this->order->save();
-
+                if ($frontendPaymentMethod == 'pointPayment'){
+                    // xử lý trừ point
+                    $currentBalance = $user->balance ?? 0;
+                    $pointChange = PointExchangeRate::exchangeToPoint($total);
+                    $newBalance = max(0,$currentBalance - $pointChange);
+                    $logPointTransaction = [
+                        'user_id' => $userId??null,
+                        'previous_balance' => $currentBalance,
+                        'point_change' => $pointChange,
+                        'current_balance' => $newBalance,
+                        'type' => 'payment',
+                        'comment' => "Thanh toán thành công đơn hàng #". ($this->order->order_serial_no??"") . " bằng " . $pointChange . " Xu",
+                    ];
+                    $user->balance = $newBalance;
+                    $user->save();
+                    PointTransaction::addLog($logPointTransaction);
+                    $this->order->payment_status = 5;
+                    $this->order->save();
+                    event(new UpdateUserPoint($user));
+                }
 //                SendOrderGotMail::dispatch(['order_id' => $this->order->id]);
 //                SendOrderGotSms::dispatch(['order_id' => $this->order->id]);
 //                SendOrderGotPush::dispatch(['order_id' => $this->order->id]);
 //                OrderPlaced::dispatch($this->order);
                 event( new OrderPlaced($this->order) );
+                event (new TableOrderCreated($this->order));
             });
             return $this->order;
         } catch (Exception $exception) {
@@ -494,6 +543,9 @@ class OrderService
                 }
                 $order->status = $request->status;
                 $order->save();
+            }
+            if ($request->status == OrderStatus::DELIVERED) { // đã hoàn thành món
+                event(new OrderCompleted($order));
             }
             event(new OrderStatusUpdated($order));
             return $order;

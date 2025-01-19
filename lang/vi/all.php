@@ -87,6 +87,8 @@ return [
         'time_slot_exist'             => 'Khung giờ đã tồn tại.',
         'resource_already_used'       => 'Không thể xóa tài nguyên này vĩnh viễn. Nó liên quan đến tài nguyên khác.',
         'phone_or_email_required'     => 'Email hoặc số điện thoại là bắt buộc',
-        'token_invalid'               => 'Token không hợp lệ'
+        'token_invalid'               => 'Token không hợp lệ',
+        'customer_not_found'          => 'Không thể xác thực khách hàng',
+        'point_not_enough'            => 'Điểm của bạn không đủ để thanh toán'
     ]
 ];

@@ -76,6 +76,7 @@
         "home": "Home",
         "dining_tables": "Dining Tables",
         "table_orders": "Table Orders",
+        "table-orders": "Table Orders",
         "point_exchange_rate": "Point exchange rate"
     },
     "label": {
@@ -686,6 +687,7 @@
         "something_wrong": "Something Wrong."
     },
     "message": {
+        "order_ready": "Order Ready",
         "please_choose_payment_method": "Please choose payment method",
         "pagination_label": "Showing {from} to {to} of {total} entries",
         "password_update": "Password Updated Successfully.",

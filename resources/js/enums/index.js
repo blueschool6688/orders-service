@@ -24,6 +24,7 @@ import sourceEnum from "./modules/sourceEnum";
 import roleEnum from './modules/roleEnum';
 import discountTypeEnum from './modules/discountTypeEnum';
 import switchEnum from './modules/switchEnum';
+import frontendPaymentMethodEnum from "./modules/frontendPaymentMethodEnum";
 
 export default {
     activityEnum,
@@ -51,6 +52,6 @@ export default {
     sourceEnum,
     roleEnum,
     discountTypeEnum,
-    switchEnum
-
+    switchEnum,
+    frontendPaymentMethodEnum
 };

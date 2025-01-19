@@ -24,15 +24,15 @@
                                 {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
                             </h4>
                         </div>
-                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>
-                        <div>
-                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">
-                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
-                            </del>
-                            <h4 class="product-card-list-price-current price-point">
-                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
-                            </h4>
-                        </div>
+<!--                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>-->
+<!--                        <div>-->
+<!--                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">-->
+<!--                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>-->
+<!--                            </del>-->
+<!--                            <h4 class="product-card-list-price-current price-point">-->
+<!--                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>-->
+<!--                            </h4>-->
+<!--                        </div>-->
                     </div>
                     <button @click.prevent="variationModalShow(item)" data-modal="#item-variation-modal"
                         class="product-card-list-cart-btn add-btn">
@@ -65,15 +65,15 @@
                                 {{ item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price }}
                             </h4>
                         </div>
-                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>
-                        <div>
-                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">
-                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
-                            </del>
-                            <h4 class="product-card-list-price-current price-point">
-                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
-                            </h4>
-                        </div>
+<!--                        <div class="divide-y border-t border-gray-200 w-full my-2"></div>-->
+<!--                        <div>-->
+<!--                            <del v-if="item.offer.length > 0" class="product-card-grid-price-previous price-point">-->
+<!--                                {{ item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>-->
+<!--                            </del>-->
+<!--                            <h4 class="product-card-list-price-current price-point">-->
+<!--                                {{ item.offer.length > 0 ? item.offer[0].point_price : item.point_price }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>-->
+<!--                            </h4>-->
+<!--                        </div>-->
                     </div>
                     <button @click.prevent="variationModalShow(item)" data-modal="#item-variation-modal"
                         class="product-card-grid-cart-btn add-btn">
