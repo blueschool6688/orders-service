@@ -63,7 +63,7 @@ use App\Http\Controllers\Admin\NotificationAlertController;
 use App\Http\Controllers\Admin\CreditBalanceReportController;
 use App\Http\Controllers\Admin\AdministratorAddressController;
 use App\Http\Controllers\Admin\PointExchangeController;
-
+use App\Http\Controllers\Admin\IngredientController;
 //FRONTEND
 
 use App\Http\Controllers\Table\OrderController as TableOrderController;
@@ -411,7 +411,12 @@ Route::prefix('admin')->name('admin.')->middleware(['installed', 'apiKey', 'auth
         Route::post('/item/{offer}', [OfferItemController::class, 'store']);
         Route::delete('/item/{offer}/{offerItem}', [OfferItemController::class, 'destroy']);
     });
-
+    Route::prefix('ingredient')->name('ingredient.')->group(function () {
+        Route::get('/',[IngredientController::class,'index']);
+        Route::post('/', [IngredientController::class, 'store']);
+        Route::match(['post', 'put', 'patch'], '/{ingredient}', [IngredientController::class, 'update']);
+        Route::delete('/{ingredient}', [IngredientController::class, 'destroy']);
+    });
     Route::prefix('item')->name('item.')->group(function () {
         Route::get('/', [ItemController::class, 'index']);
         Route::get('/show/{item}', [ItemController::class, 'show']);
@@ -580,7 +585,6 @@ Route::prefix('frontend')->name('frontend.')->middleware(['installed', 'apiKey',
         Route::get('/featured-items', [FrontendItemController::class, 'featuredItems']);
         Route::get('/popular-items', [FrontendItemController::class, 'mostPopularItems']);
     });
-
     Route::prefix('device-token')->name('device-token.')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/web', [TokenStoreController::class, 'webToken']);
         Route::post('/mobile', [TokenStoreController::class, 'deviceToken']);

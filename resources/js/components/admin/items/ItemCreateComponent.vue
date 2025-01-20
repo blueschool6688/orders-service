@@ -23,7 +23,40 @@
                             id="price" class="db-field-control">
                         <small class="db-field-alert" v-if="errors.price">{{ errors.price[0] }}</small>
                     </div>
-
+                    <div class="form-col-12">
+                        <label class="db-field-title">{{ $t("menu.ingredients") }}</label>
+                        <div v-for="(ingredient, index) in ingredients" :key="index" class="flex items-center gap-2 mb-2">
+                            <vue-select
+                                v-if="ingredient"
+                                class="db-field-control f-b-custom-select"
+                                v-model="ingredient.id"
+                                :options="availableIngredients(index)"
+                                label-by="label"
+                                value-by="id"
+                                :placeholder="$t('label.select_ingredient')"
+                            />
+                            <input
+                                v-if="ingredient"
+                                type="number"
+                                v-model="ingredient.quantity_per_unit"
+                                class="db-field-control w-24"
+                                :placeholder="$t('label.quantity')"
+                                min="1"
+                            />
+                            <button
+                                v-if="ingredient"
+                                type="button"
+                                class="db-btn bg-red-600 text-white py-1 px-2"
+                                @click="removeIngredient(index)"
+                            >
+                                {{ $t("button.remove") }}
+                            </button>
+                        </div>
+                        <button type="button" class="db-btn bg-primary text-white py-2 px-4 mt-2" @click="addIngredient">
+                            {{ $t("button.add_ingredient") }}
+                        </button>
+                        <small class="db-field-alert" v-if="errors.ingredient">{{ errors.ingredient[0] }}</small>
+                    </div>
                     <div class="form-col-12 sm:form-col-6">
                         <label for="item_category_id" class="db-field-title required">{{ $t("label.category") }}</label>
                         <vue-select class="db-field-control f-b-custom-select" id="item_category_id"
@@ -167,11 +200,11 @@ import appService from "../../../services/appService";
 export default {
     name: "ItemCreateComponent",
     components: { SmSidebarModalCreateComponent, LoadingComponent },
-    props: ['props'],
+    props: ["props"],
     data() {
         return {
             loading: {
-                isActive: false
+                isActive: false,
             },
             enums: {
                 statusEnum: statusEnum,
@@ -179,52 +212,93 @@ export default {
                 askEnum: askEnum,
                 statusEnumArray: {
                     [statusEnum.ACTIVE]: this.$t("label.active"),
-                    [statusEnum.INACTIVE]: this.$t("label.inactive")
+                    [statusEnum.INACTIVE]: this.$t("label.inactive"),
                 },
                 itemTypeEnumArray: {
                     [itemTypeEnum.VEG]: this.$t("label.veg"),
-                    [itemTypeEnum.NON_VEG]: this.$t("label.non_veg")
+                    [itemTypeEnum.NON_VEG]: this.$t("label.non_veg"),
                 },
                 askEnumArray: {
                     [askEnum.YES]: this.$t("label.yes"),
-                    [askEnum.NO]: this.$t("label.no")
-                }
+                    [askEnum.NO]: this.$t("label.no"),
+                },
             },
             image: "",
             errors: {},
-        }
+            ingredients: [],
+            ingredientOptions: [],
+        };
     },
     computed: {
         addButton: function () {
-            return { title: this.$t('button.add_item') };
+            return { title: this.$t("button.add_item") };
         },
         itemCategories: function () {
-            return this.$store.getters['itemCategory/lists'];
+            return this.$store.getters["itemCategory/lists"];
         },
         taxes: function () {
-            return this.$store.getters['tax/lists'];
-        }
+            return this.$store.getters["tax/lists"];
+        },
+    },
+    watch: {
+        "props.form.ingredients": {
+            immediate: true,
+            handler(newIngredients) {
+                this.ingredients = newIngredients
+                    ? newIngredients.map((ingredient) => ({
+                        id: ingredient.id,
+                        quantity_per_unit: ingredient.pivot?.quantity_per_unit || 0,
+                    }))
+                    : [];
+                console.log(this.ingredients);
+            },
+        },
     },
     mounted() {
         this.loading.isActive = true;
-        this.$store.dispatch('itemCategory/lists', {
-            order_column: 'sort',
-            order_type: 'asc',
-            status: statusEnum.ACTIVE
+        this.$store.dispatch("itemCategory/lists", {
+            order_column: "sort",
+            order_type: "asc",
+            status: statusEnum.ACTIVE,
         });
-        this.$store.dispatch('tax/lists', {
-            order_column: 'id',
-            order_type: 'asc'
+        this.$store.dispatch("tax/lists", {
+            order_column: "id",
+            order_type: "asc",
         });
         this.loading.isActive = false;
+        this.ingredients = this.props.form.ingredients || []
+        console.log( this.props.form.ingredients)
+        this.fetchIngredients();
     },
     methods: {
-        changeImage: function (e) {
+        fetchIngredients() {
+            this.$store
+                .dispatch("ingredient/lists", { paginate: 0 })
+                .then((res) => {
+                    this.ingredientOptions = res.data.data.map((ingredient) => ({
+                        ...ingredient,
+                        label: `${ingredient.name} (${ingredient.unit})`,
+                    }));
+                });
+        },
+        addIngredient() {
+            this.ingredients.push({ id: null, quantity_per_unit: 1 });
+        },
+        removeIngredient(index) {
+            this.ingredients.splice(index, 1);
+        },
+        availableIngredients(currentIndex) {
+            const selectedIds = this.ingredients
+                .filter((_, index) => index !== currentIndex)
+                .map((ingredient) => ingredient.id);
+            return this.ingredientOptions.filter((option) => !selectedIds.includes(option.id));
+        },
+        changeImage(e) {
             this.image = e.target.files[0];
         },
-        reset: function () {
+        reset() {
             appService.sideDrawerHide();
-            this.$store.dispatch('item/reset').then().catch();
+            this.$store.dispatch("item/reset").then().catch();
             this.errors = {};
             this.$props.props.form = {
                 name: "",
@@ -236,65 +310,85 @@ export default {
                 item_category_id: null,
                 tax_id: null,
                 status: statusEnum.ACTIVE,
+                ingredients:[]
             };
             if (this.image) {
                 this.image = "";
                 this.$refs.imageProperty.value = null;
             }
+            this.ingredients = [];
         },
-        save: function () {
+        save() {
             try {
-                const fd = new FormData();
-                fd.append('name', this.props.form.name);
-                fd.append('price', this.props.form.price);
-                fd.append('item_category_id', this.props.form.item_category_id == null ? '' : this.props.form.item_category_id);
-                fd.append('tax_id', this.props.form.tax_id == null ? '' : this.props.form.tax_id);
-                fd.append('item_type', this.props.form.item_type);
-                fd.append('is_featured', this.props.form.is_featured);
-                fd.append('description', this.props.form.description);
-                fd.append('caution', this.props.form.caution);
-                fd.append('order', 1);
-                fd.append('status', this.props.form.status);
-                if (this.image) {
-                    fd.append('image', this.image);
+                if (
+                    !this.ingredients.length ||
+                    this.ingredients.some((ingredient) => !ingredient.id || !ingredient.quantity_per_unit)
+                ) {
+                    alertService.error(this.$t("error.ingredients_required"));
+                    return;
                 }
-                const tempId = this.$store.getters['item/temp'].temp_id;
+
+                const fd = new FormData();
+                fd.append("name", this.props.form.name);
+                fd.append("price", this.props.form.price);
+                fd.append(
+                    "item_category_id",
+                    this.props.form.item_category_id == null
+                        ? ""
+                        : this.props.form.item_category_id
+                );
+                fd.append(
+                    "tax_id",
+                    this.props.form.tax_id == null ? "" : this.props.form.tax_id
+                );
+                fd.append("item_type", this.props.form.item_type);
+                fd.append("is_featured", this.props.form.is_featured);
+                fd.append("description", this.props.form.description);
+                fd.append("caution", this.props.form.caution);
+                fd.append("order", 1);
+                fd.append("status", this.props.form.status);
+
+                this.ingredients.forEach((ingredient, index) => {
+                    fd.append(`ingredients[${index}][id]`, ingredient.id);
+                    fd.append(`ingredients[${index}][quantity]`, ingredient.quantity_per_unit);
+                });
+                if (this.image) {
+                    fd.append("image", this.image);
+                }
+                const tempId = this.$store.getters["item/temp"].temp_id;
                 this.loading.isActive = true;
-                this.$store.dispatch('item/save', {
-                    form: fd,
-                    search: this.props.search
-                }).then((res) => {
-                    appService.sideDrawerHide();
-                    this.loading.isActive = false;
-                    alertService.successFlip((tempId === null ? 0 : 1), this.$t('menu.items'));
-                    this.props.form = {
-                        name: "",
-                        price: "",
-                        description: "",
-                        caution: "",
-                        is_featured: askEnum.YES,
-                        item_type: itemTypeEnum.VEG,
-                        item_category_id: null,
-                        tax_id: null,
-                        status: statusEnum.ACTIVE,
-                    };
-                    this.image = "";
-                    this.errors = {};
-                    this.$refs.imageProperty.value = null;
-                }).catch((err) => {
-                    this.loading.isActive = false;
-                    this.errors = {};
-                    if (err.response && err.response.data && err.response.data.errors) {
-                        this.errors = err.response.data.errors;
-                    } else {
-                        alertService.error(err.response.data.message);
-                    }
-                })
+                this.$store
+                    .dispatch("item/save", {
+                        form: fd,
+                        search: this.props.search,
+                    })
+                    .then((res) => {
+                        appService.sideDrawerHide();
+                        this.loading.isActive = false;
+                        alertService.successFlip(
+                            tempId === null ? 0 : 1,
+                            this.$t("menu.items")
+                        );
+                        this.reset();
+                    })
+                    .catch((err) => {
+                        this.loading.isActive = false;
+                        this.errors = {};
+                        if (
+                            err.response &&
+                            err.response.data &&
+                            err.response.data.errors
+                        ) {
+                            this.errors = err.response.data.errors;
+                        } else {
+                            alertService.error(err.response.data.message);
+                        }
+                    });
             } catch (err) {
                 this.loading.isActive = false;
-                alertService.error(err)
+                alertService.error(err);
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>

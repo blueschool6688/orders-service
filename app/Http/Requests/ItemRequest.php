@@ -43,6 +43,9 @@ class ItemRequest extends FormRequest
             'order'            => ['required', 'numeric'],
             'variations'       => ['nullable', 'json'],
             'image'            => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'ingredients'      => ['required'],
+            'ingredients.*.id' => ['numeric', 'exists:ingredients,id'],
+            'ingredients.*.quantity' => ['required_with:ingredients', 'numeric', 'min:0.01'],
         ];
     }
 

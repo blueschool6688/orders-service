@@ -113,4 +113,48 @@ class Item extends Model implements HasMedia
     {
         return $this->belongsToMany(Offer::class, 'offer_items');
     }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredient::class, 'item_ingredients')
+                ->withPivot('quantity_per_unit')
+                ->withTimestamps();
+    }
+
+    /**
+     * Kiểm tra món ăn có đủ nguyên liệu để order không
+     * @param int $quantity
+     * @return array
+     */
+    public function canBeOrdered($quantity)
+    {
+        $insufficientIngredients = [];
+
+        foreach ($this->ingredients as $ingredient) {
+            $requiredQuantity = $ingredient->pivot->quantity_per_unit * $quantity;
+
+            if (!$ingredient->isSufficient($requiredQuantity)) {
+                $insufficientIngredients[] = [
+                    'ingredient' => $ingredient->name,
+                    'required' => $requiredQuantity,
+                    'available' => $ingredient->quantity,
+                ];
+            }
+        }
+        return [
+            'can_order' => empty($insufficientIngredients),
+            'insufficient_ingredients' => $insufficientIngredients
+        ];
+    }
+    /**
+     * Trừ nguyên liệu khi món được order
+     * @param int $quantity
+     */
+    public function deductIngredients($quantity)
+    {
+        foreach ($this->ingredients as $ingredient) {
+            $requiredQuantity = $ingredient->pivot->quantity_per_unit * $quantity;
+            $ingredient->deductQuantity($requiredQuantity);
+        }
+    }
 }

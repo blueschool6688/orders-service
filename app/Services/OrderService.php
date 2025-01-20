@@ -8,6 +8,7 @@ use App\Events\OrderPlaced;
 use App\Events\OrderStatusUpdated;
 use App\Events\TableOrderCreated;
 use App\Events\UpdateUserPoint;
+use App\Models\IngredientLog;
 use App\Models\PointExchangeRate;
 use App\Models\PointTransaction;
 use Exception;
@@ -354,6 +355,27 @@ class OrderService
     {
         try {
             DB::transaction(function () use ($request) {
+
+                $requestItems = json_decode($request->items);
+                foreach ($requestItems as $i) {
+                    $itemId = $i->item_id??null;
+                    if (!$itemId) {
+                        continue;
+                    }
+                    $item = Item::find($itemId);
+                    if ($item) {
+                        $itemIngredients = $item->ingredients ??[];
+                        foreach ($itemIngredients as $ingredient) {
+                            $itemIngredient = $ingredient->pivot;
+                            $remainQuantity = ($ingredient->quantity??0) - ($itemIngredient->quantity_per_unit??0) ;
+                            $name = $item->name ?? "Món";
+                            $ingredientName = $ingredient->name ?? "N/A";
+                            if ($remainQuantity < 0) {
+                                throw new Exception( trans('all.message.out_of_stock'), 422);
+                            }
+                        }
+                    }
+                }
                 $frontendPaymentMethod = $request->frontend_payment_method ?? null;
                 $total = $request->total ?? 0;
                 $customerId = $request->customer_id ?? null;
@@ -384,7 +406,6 @@ class OrderService
                 $i            = 0;
                 $totalTax     = 0;
                 $itemsArray   = [];
-                $requestItems = json_decode($request->items);
                 $items        = Item::get()->pluck('tax_id', 'id');
                 $taxes        = AppLibrary::pluck(Tax::get(), 'obj', 'id');
 
@@ -505,6 +526,24 @@ class OrderService
     public function changeStatus(Order $order, $auth = false, OrderStatusRequest $request): Order|array
     {
         try {
+            if (!in_array($request->status, [OrderStatus::REJECTED, OrderStatus::CANCELED])) {
+                    $items = $order->items;
+
+                    foreach ($items as $item) {
+                        $itemIngredients = $item->ingredients ?? [];
+
+                        foreach ($itemIngredients as $ingredient) {
+                            $itemIngredient = $ingredient->pivot;
+                            $remainQuantity = ($ingredient->quantity??0) - ($itemIngredient->quantity_per_unit??0) ;
+                            $name = $item->name ?? "Món";
+                            $ingredientName = $ingredient->name ?? "N/A";
+                            if ($remainQuantity < 0) {
+                                throw new Exception( $name.' '. trans('all.message.out_of_stock') . ' ' . $ingredientName, 422);
+                            }
+                        }
+                    }
+            }
+
             if ($auth) {
                 if ($order->user_id == Auth::user()->id) {
                     if ($request->reason) {
@@ -544,7 +583,37 @@ class OrderService
                 $order->status = $request->status;
                 $order->save();
             }
-            if ($request->status == OrderStatus::DELIVERED) { // đã hoàn thành món
+            if ($request->status == OrderStatus::DELIVERED) {
+
+                $items = $order->items;
+
+                foreach ($items as $item) {
+                    $itemIngredients = $item->ingredients;
+
+                    foreach ($itemIngredients as $ingredient) {
+                        $itemIngredient = $ingredient->pivot;
+                        $remainQuantity = ($ingredient->quantity??0) - ($itemIngredient->quantity_per_unit??0) ;
+                        $name = $item->name ?? "Món";
+                        $ingredientName = $ingredient->name ?? "N/A";
+                        if ($remainQuantity < 0) {
+                            throw new Exception( $name.' '. trans('all.message.out_of_stock') . ' ' . $ingredientName, 422);
+                        }
+                        else{
+                            $beforeQuantity = $ingredient->quantity??0;
+                            $quantityChange = $itemIngredient->quantity_per_unit??0;
+                            IngredientLog::create([
+                                'ingredient_id' => $ingredient->id ?? null,
+                                'before_quantity'=>$beforeQuantity,
+                                'quantity_change'=>$quantityChange,
+                                'current_quantity'=>$remainQuantity,
+                                'type'=>'subtract',
+                            ]);
+                            $ingredient->quantity = $remainQuantity;
+                            $ingredient->save();
+                        }
+                    }
+                }
+
                 event(new OrderCompleted($order));
             }
             event(new OrderStatusUpdated($order));

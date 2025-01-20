@@ -77,9 +77,13 @@
         "dining_tables": "Bàn ăn",
         "table_orders": "Đơn hàng tại bàn",
         "table-orders": "Đơn hàng tại bàn",
-        "point_exchange_rate": "Tỉ giá quy đổi điểm"
+        "point_exchange_rate": "Tỉ giá quy đổi điểm",
+        "ingredients": "Nguyên liệu"
     },
     "label": {
+        "select_ingredient": "Chọn nguyên liệu",
+        "ingredient_max_quantity": "Ngưỡng báo động",
+        "ingredient_unit": "Đơn vị",
         "point_payment": "Thanh toán bằng điểm",
         "payment_success": "Thanh toán thành công",
         "scan_to_pay": "Quét để thanh toán",
@@ -583,6 +587,8 @@
         "rate": "Tỉ giá quy đổi"
     },
     "button": {
+        "remove": "Bỏ",
+        "add_ingredient": "Thêm nguyên liệu",
         "confirm_payment": "Xác nhận thanh toán",
         "add": "Thêm",
         "save": "Lưu",
@@ -683,6 +689,7 @@
         "1000": "1000"
     },
     "error": {
+        "ingredients_required": "Vui lòng chọn nguyên liệu",
         "something_wrong": "Có gì đó chưa đúng"
     },
     "message": {

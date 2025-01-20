@@ -55,7 +55,8 @@ class ItemResource extends JsonResource
                         return $offer;
                     }
                 })
-            )
+            ),
+            "ingredients"      => ItemIngredientResource::collection($this->ingredients),
         ];
     }
 

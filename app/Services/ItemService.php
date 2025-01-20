@@ -86,6 +86,12 @@ class ItemService
                 if ($request->variations) {
                     $this->item->variations()->createMany(json_decode($request->variations, true));
                 }
+                if (!empty($request->ingredients)) {
+                    foreach ($request->ingredients as $ingredient) {
+                        $this->item->ingredients()->attach($ingredient['id'], ['quantity_per_unit' => $ingredient['quantity']??0]);
+                    }
+                }
+
             });
             return $this->item;
         } catch (Exception $exception) {
@@ -133,6 +139,15 @@ class ItemService
                     if ($variationDeleteArray) {
                         ItemVariation::whereIn('id', $variationDeleteArray)->delete();
                     }
+                }
+                if (!empty($request->ingredients)) {
+                    $syncData = [];
+                    foreach ($request->ingredients as $ingredient) {
+                        $syncData[$ingredient['id']] = [
+                            'quantity_per_unit' => $ingredient['quantity'] ?? 0,
+                        ];
+                    }
+                    $item->ingredients()->sync($syncData);
                 }
             });
             return Item::find($item->id);

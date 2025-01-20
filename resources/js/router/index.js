@@ -24,7 +24,7 @@ import adminTableOrderRoutes from "./modules/adminTableOrderRoutes";
 import diningTableRoutes from "./modules/diningTableRoutes";
 import frontendRoutes from "./modules/frontendRoutes";
 import topUpRoutes from "./modules/topUpRoutes";
-
+import ingredientRoutes from "./modules/ingredientRoutes";
 const baseRoutes = [
     {
         path: "/admin",
@@ -86,7 +86,8 @@ const routes = baseRoutes.concat(
     adminTableOrderRoutes,
     diningTableRoutes,
     frontendRoutes,
-    topUpRoutes
+    topUpRoutes,
+    ingredientRoutes
 );
 
 const permission = store.getters.authPermission;

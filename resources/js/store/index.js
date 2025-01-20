@@ -67,7 +67,9 @@ import { tableOrder } from './modules/tableOrder';
 import { notificationAlert } from './modules/notificationAlert';
 import { notification } from './modules/notification';
 import {frontendBanner} from "./modules/frontend/frontendBanner";
-import {point} from "./modules/point"
+import {point} from "./modules/point";
+import {ingredient} from "./modules/ingredient";
+
 export default new createStore({
     state: {},
     mutations: {},
@@ -139,7 +141,8 @@ export default new createStore({
         tableOrder,
         notificationAlert,
         notification,
-        point
+        point,
+        ingredient
     },
     plugins: [
         createPersistedState({

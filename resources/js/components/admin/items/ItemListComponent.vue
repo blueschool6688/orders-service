@@ -22,7 +22,7 @@
                         </div>
                     </div>
                      <ItemUploadComponent v-on:list="list" />
-                    <ItemCreateComponent :props="props" v-if="permissionChecker('items_create')" />
+                    <ItemCreateComponent :props="props"  v-if="permissionChecker('items_create')" />
                 </div>
             </div>
 
@@ -265,6 +265,7 @@ export default {
                     item_category_id: null,
                     tax_id: null,
                     status: statusEnum.ACTIVE,
+                    ingredients:[]
                 },
                 search: {
                     paginate: 1,
@@ -279,7 +280,7 @@ export default {
                     tax_id: null,
                     item_type: null,
                     is_featured: null
-                }
+                },
             }
         }
     },
@@ -372,6 +373,7 @@ export default {
                 tax_id: item.tax_id,
                 item_category_id: item.item_category_id,
                 status: item.status,
+                ingredients: item.ingredients
             };
         },
         destroy: function (id) {

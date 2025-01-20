@@ -90,5 +90,6 @@ return [
         'token_invalid'               => 'Token invalid',
         'customer_not_found'          => 'Customer not found',
         'point_not_enough'            => 'Your point is not enough',
+        'out_of_stock'                => "Out of stock",
     ]
 ];

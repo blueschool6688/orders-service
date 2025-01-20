@@ -77,9 +77,13 @@
         "dining_tables": "Dining Tables",
         "table_orders": "Table Orders",
         "table-orders": "Table Orders",
-        "point_exchange_rate": "Point exchange rate"
+        "point_exchange_rate": "Point exchange rate",
+        "ingredients" : "Ingredients"
     },
     "label": {
+        "select_ingredient": "Select Ingredient",
+        "ingredient_max_quantity": "Minimum threshold",
+        "ingredient_unit": "Ingredient Unit",
         "point_payment": "Point payment",
         "payment_success": "Payment Success",
         "scan_to_pay": "Scan to pay",
@@ -584,6 +588,8 @@
         "rate": "Exchange Rate"
     },
     "button": {
+        "remove": "Remove",
+        "add_ingredient": "Add Ingredient",
         "confirm_payment": "Confirm payment",
         "add": "Add",
         "save": "Save",
@@ -684,6 +690,7 @@
         "1000": "1000"
     },
     "error": {
+        "ingredients_required": "Ingredients Required",
         "something_wrong": "Something Wrong."
     },
     "message": {

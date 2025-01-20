@@ -89,6 +89,7 @@ return [
         'phone_or_email_required'     => 'Email hoặc số điện thoại là bắt buộc',
         'token_invalid'               => 'Token không hợp lệ',
         'customer_not_found'          => 'Không thể xác thực khách hàng',
-        'point_not_enough'            => 'Điểm của bạn không đủ để thanh toán'
+        'point_not_enough'            => 'Điểm của bạn không đủ để thanh toán',
+        'out_of_stock'                => "Không đủ nguyên liệu",
     ]
 ];
