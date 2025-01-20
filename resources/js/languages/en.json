@@ -81,6 +81,11 @@
         "ingredients" : "Ingredients"
     },
     "label": {
+        "subtract": "Subtract",
+        "add": "Add",
+        "change_type" : "Change type",
+        "quantity_change": "Quantity Change",
+        "current_quantity": "Current Quantity",
         "select_ingredient": "Select Ingredient",
         "ingredient_max_quantity": "Minimum threshold",
         "ingredient_unit": "Ingredient Unit",
@@ -694,6 +699,7 @@
         "something_wrong": "Something Wrong."
     },
     "message": {
+        "quantity_not_allow_less_than_zero": "The quantity cannot be less than zero",
         "order_ready": "Order Ready",
         "please_choose_payment_method": "Please choose payment method",
         "pagination_label": "Showing {from} to {to} of {total} entries",

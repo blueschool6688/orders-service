@@ -81,6 +81,11 @@
         "ingredients": "Nguyên liệu"
     },
     "label": {
+        "subtract": "Trừ",
+        "add": "Thêm",
+        "change_type" : "Hành động",
+        "quantity_change": "Số lượng thay đổi",
+        "current_quantity": "Số lượng hiện tại",
         "select_ingredient": "Chọn nguyên liệu",
         "ingredient_max_quantity": "Ngưỡng báo động",
         "ingredient_unit": "Đơn vị",
@@ -693,6 +698,7 @@
         "something_wrong": "Có gì đó chưa đúng"
     },
     "message": {
+        "quantity_not_allow_less_than_zero": "Số lượng không thể nhỏ hơn 0",
         "order_ready": "Đơn hàng đã sẵn sàng",
         "please_choose_payment_method": "Vui lòng chọn phương thức thanh toán",
         "pagination_label": "Hiển thị {from} đến {to} trong tổng số {total} mục",

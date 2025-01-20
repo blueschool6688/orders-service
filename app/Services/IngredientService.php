@@ -110,13 +110,15 @@ class IngredientService{
                 $threshold = $quantity * ($threshold_percent / 100);
                 $ingredient->max_quantity = $threshold;
                 $ingredient->save();
-                IngredientLog::create([
-                    'ingredient_id' => $ingredient->id ?? null,
-                    'before_quantity' => $before_quantity,
-                    'quantity_change' => $quantity_change,
-                    'current_quantity' => $newQuantity,
-                    'type' => $type,
-                ]);
+                if($before_quantity !== $newQuantity){
+                    IngredientLog::create([
+                        'ingredient_id' => $ingredient->id ?? null,
+                        'before_quantity' => $before_quantity,
+                        'quantity_change' => $quantity_change,
+                        'current_quantity' => $newQuantity,
+                        'type' => $type,
+                    ]);
+                }
             });
             return Ingredient::find($ingredient->id);
         }

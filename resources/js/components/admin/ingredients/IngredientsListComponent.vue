@@ -7,7 +7,7 @@
                 <div class="db-card-filter">
                     <TableLimitComponent :method="list" :search="props.search" :page="paginationPage" />
                     <FilterComponent />
-                    <IngredientCreateComponent :props="props"/>
+                    <IngredientCreateComponent :props="props" :isEdit="isEdit"/>
                 </div>
             </div>
             <div class="table-filter-div">
@@ -145,6 +145,7 @@ import statusEnum from "../../../enums/modules/statusEnum";
                       unit: "",
                   },
               },
+              isEdit: false,
               printLoading: true,
               printObj: {
                   id: "print",
@@ -205,6 +206,7 @@ import statusEnum from "../../../enums/modules/statusEnum";
                     quantity: item.quantity,
                     unit: item.unit,
                 };
+                this.isEdit = true
             },
             destroy: function (id) {
                 appService.destroyConfirmation().then((res) => {
