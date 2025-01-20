@@ -8,7 +8,7 @@ use App\Http\Requests\PaginateRequest;
 use App\Http\Resources\IngredientResource;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
-use App\services\IngredientService;
+use App\Services\IngredientService;
 class IngredientController extends AdminController
 {
     public IngredientService $ingredientService;

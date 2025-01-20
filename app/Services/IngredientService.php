@@ -1,6 +1,6 @@
 <?php
 
-namespace App\services;
+namespace App\Services;
 use App\Http\Requests\IngredientRequest;
 use App\Models\IngredientLog;
 use Exception;
