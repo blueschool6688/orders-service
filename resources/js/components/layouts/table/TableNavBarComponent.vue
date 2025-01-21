@@ -6,7 +6,7 @@
             <div class="w-full flex items-center justify-between gap-3 xl:gap-8 lg:justify-start lg:w-fit">
                 <router-link :to="{ name: 'table.menu.table'}"
                     class="flex-shrink-0 logo-img">
-                    <img class="w-28 sm:w-40" :src="setting.theme_logo" alt="logo">
+                    <img class="w-12 sm:w-16" :src="setting.theme_logo" alt="logo">
                 </router-link>
 
                 <!-- This code for mobile device -->
@@ -19,14 +19,14 @@
                             setting.site_default_currency_symbol, setting.site_currency_position) }}
                     </span>
                     </button>
-                    <button @click="toggleMobileMenu" v-if="!isMobileMenuOpen" class="lg:hidden text-[#D1992C]">
+                    <button @click="toggleMobileMenu" v-if="!isMobileMenuOpen" class="lg:hidden text-[#D1992C] text-2xl">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
                 <nav
                     class="fixed inset-0 bg-white z-50 p-4 flex flex-col gap-4 transform transition-transform duration-300 ease-in-out lg:hidden"
                     :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'">
-                    <button @click="toggleMobileMenu" class="self-end text-[#D1992C] mb-4 lg:hidden">
+                    <button @click="toggleMobileMenu" class="self-end text-[#D1992C] mb-4 lg:hidden text-2xl">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                     <!-- QR Code Button -->

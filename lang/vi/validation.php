@@ -12,7 +12,7 @@ return [
     | tắc về kích thước. Bạn có thể tùy chỉnh các thông báo này tại đây.
     |
     */
-
+    'max_quantity_less_than_quantity'=>'Ngưỡng báo động phải thấp hơn số lượng tồn kho',
     'accepted' => ':attribute phải được chấp nhận.',
     'accepted_if' => ':attribute phải được chấp nhận khi :other là :value.',
     'active_url' => ':attribute không phải là URL hợp lệ.',

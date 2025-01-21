@@ -7,7 +7,7 @@
                 <div class="db-card-filter">
                     <TableLimitComponent :method="list" :search="props.search" :page="paginationPage" />
                     <FilterComponent />
-                    <IngredientCreateComponent :props="props" :isEdit="isEdit"/>
+                    <IngredientCreateComponent :props="props" :isEdit="isEdit" @resetEditMode="resetEditMode"/>
                 </div>
             </div>
             <div class="table-filter-div">
@@ -143,6 +143,7 @@ import statusEnum from "../../../enums/modules/statusEnum";
                       name: "",
                       quantity:0,
                       unit: "",
+                      max_quantity:0
                   },
               },
               isEdit: false,
@@ -171,6 +172,9 @@ import statusEnum from "../../../enums/modules/statusEnum";
             this.list()
         },
         methods: {
+            resetEditMode() {
+                this.isEdit = false;
+            },
             textShortener: function (text, number = 30) {
                 return appService.textShortener(text, number);
             },
@@ -205,6 +209,7 @@ import statusEnum from "../../../enums/modules/statusEnum";
                     name: item.name,
                     quantity: item.quantity,
                     unit: item.unit,
+                    max_quantity: item.max_quantity
                 };
                 this.isEdit = true
             },

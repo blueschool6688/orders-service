@@ -25,8 +25,18 @@ class IngredientRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:1',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|numeric|min:0',
             'unit' => 'required|string|min:1',
+            'max_quantity' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    if ($value !== null && $value >= $this->quantity) {
+                        $fail(__('validation.max_quantity_less_than_quantity'));
+                    }
+                },
+            ],
         ];
     }
 }

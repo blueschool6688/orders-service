@@ -39,7 +39,7 @@ use Smartisan\Settings\Facades\Settings;
 use App\Http\Requests\OrderStatusRequest;
 use App\Http\Requests\PaymentStatusRequest;
 use App\Http\Requests\TableOrderTokenRequest;
-
+use App\Services\TelegramNotification;
 class OrderService
 {
     public object $order;
@@ -610,6 +610,18 @@ class OrderService
                             ]);
                             $ingredient->quantity = $remainQuantity;
                             $ingredient->save();
+                        }
+                        $currentQuantity = $ingredient->quantity ?? 0;
+                        $threshold = $ingredient->max_quantity ?? 0;
+                        $unit = $ingredient->unit ?? "";
+                        if ($currentQuantity <= $threshold){
+                            $telegramNotification = new TelegramNotification();
+                            $telegramNotification->notifyLowStock(
+                                $ingredient->name ?? 'N/A',
+                                $currentQuantity,
+                                $threshold,
+                                $unit
+                            );
                         }
                     }
                 }

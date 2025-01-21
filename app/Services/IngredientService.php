@@ -70,12 +70,15 @@ class IngredientService{
         try {
             DB::transaction(function () use ($request) {
                 $this->ingredient = Ingredient::create($request->validated());
-                $threshold_percent = Settings::group('ingredients')->get('alert_threshold_percent') ?? 10;
-                $quantity = $this->ingredient->quantity ?? 0;
-                $threshold = $quantity * ($threshold_percent / 100);
-                $this->ingredient->max_quantity = $threshold;
-                $this->ingredient->save();
 
+                $quantity = $this->ingredient->quantity ?? 0;
+                $maxQuantity = $request->max_quantity?? null;
+                if(!$maxQuantity || $maxQuantity <0){
+                    $threshold_percent = Settings::group('ingredients')->get('alert_threshold_percent') ?? 10;
+                    $threshold = $quantity * ($threshold_percent / 100);
+                    $this->ingredient->max_quantity = $threshold;
+                    $this->ingredient->save();
+                }
                 IngredientLog::create([
                     'ingredient_id' => $this->ingredient->id ?? null,
                     'before_quantity' => 0,
@@ -105,11 +108,15 @@ class IngredientService{
                 $quantity_change = abs($newQuantity - $before_quantity);
 
                 $ingredient->update($request->validated());
-                $threshold_percent = Settings::group('ingredients')->get('alert_threshold_percent') ?? 10;
-                $quantity = $ingredient->quantity ?? 0;
-                $threshold = $quantity * ($threshold_percent / 100);
-                $ingredient->max_quantity = $threshold;
-                $ingredient->save();
+
+                $maxQuantity = $request->max_quantity?? null;
+                if(!$maxQuantity || $maxQuantity <0){
+                    $threshold_percent = Settings::group('ingredients')->get('alert_threshold_percent') ?? 10;
+                    $quantity = $ingredient->quantity ?? 0;
+                    $threshold = $quantity * ($threshold_percent / 100);
+                    $ingredient->max_quantity = $threshold;
+                    $ingredient->save();
+                }
                 if($before_quantity !== $newQuantity){
                     IngredientLog::create([
                         'ingredient_id' => $ingredient->id ?? null,

@@ -49,7 +49,12 @@
                                id="quantity" class="db-field-control">
                         <small class="db-field-alert" v-if="errors.quantity">{{ errors.quantity[0] }}</small>
                     </div>
-
+                    <div class="form-col-12 sm:form-col-6">
+                        <label for="max_quantity" class="db-field-title required">{{ $t("label.ingredient_max_quantity") }}</label>
+                        <input v-model="props.form.max_quantity" v-bind:class="errors.max_quantity ? 'invalid' : ''" type="text"
+                               id="max_quantity" class="db-field-control">
+                        <small class="db-field-alert" v-if="errors.max_quantity">{{ errors.max_quantity[0] }}</small>
+                    </div>
                     <div class="form-col-12 sm:form-col-6">
                         <label for="unit" class="db-field-title required">{{ $t("label.ingredient_unit") }}</label>
                         <input v-model="props.form.unit" v-bind:class="errors.unit ? 'invalid' : ''" type="text"
@@ -97,6 +102,7 @@ export default {
             changeType: "add",
         }
     },
+    emits: ["resetEditMode"],
     computed:{
         addButton: function () {
             return { title: this.$t('button.add_ingredient') };
@@ -127,6 +133,7 @@ export default {
             this.$props.isEdit = false
             this.changeType = "add"
             this.quantityChange = 0
+            this.$emit("resetEditMode");
         },
         save:function(){
             try {
