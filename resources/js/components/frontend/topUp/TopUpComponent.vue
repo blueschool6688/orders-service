@@ -4,34 +4,34 @@
         <!-- Left Section -->
         <div class="col-span-12 lg:col-span-8">
             <!-- Input for Manual Points -->
-            <div class="mb-8 p-6 bg-white rounded-lg shadow">
-                <h3 class="text-lg font-bold mb-4">{{ $t("label.enter_points") }}</h3>
-                <div class="grid grid-cols-12 gap-4 items-center">
-                    <div class="col-span-12 md:col-span-6">
-                        <label for="points" class="db-field-title required">{{ $t("label.points") }}</label>
-                        <input
-                            :value="form.points"
-                            @input="handleInput"
-                            type="number"
-                            id="points"
-                            class="db-field-control w-full"
-                            min="0"
-                            placeholder="Enter points"
-                        />
-                    </div>
-                    <div class="col-span-12 md:col-span-6">
-                        <label for="payment_amount" class="db-field-title">{{ $t("label.payment_amount") }}</label>
-                        <input
-                            :value="totalPrice"
-                            type="text"
-                            id="payment_amount"
-                            class="db-field-control w-full"
-                            readonly
-                            placeholder="Payment Amount"
-                        />
-                    </div>
-                </div>
-            </div>
+<!--            <div class="mb-8 p-6 bg-white rounded-lg shadow">-->
+<!--                <h3 class="text-lg font-bold mb-4">{{ $t("label.enter_points") }}</h3>-->
+<!--                <div class="grid grid-cols-12 gap-4 items-center">-->
+<!--                    <div class="col-span-12 md:col-span-6">-->
+<!--                        <label for="points" class="db-field-title required">{{ $t("label.points") }}</label>-->
+<!--                        <input-->
+<!--                            :value="form.points"-->
+<!--                            @input="handleInput"-->
+<!--                            type="number"-->
+<!--                            id="points"-->
+<!--                            class="db-field-control w-full"-->
+<!--                            min="0"-->
+<!--                            placeholder="Enter points"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                    <div class="col-span-12 md:col-span-6">-->
+<!--                        <label for="payment_amount" class="db-field-title">{{ $t("label.payment_amount") }}</label>-->
+<!--                        <input-->
+<!--                            :value="totalPrice"-->
+<!--                            type="text"-->
+<!--                            id="payment_amount"-->
+<!--                            class="db-field-control w-full"-->
+<!--                            readonly-->
+<!--                            placeholder="Payment Amount"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <!-- Packages -->
             <div class="p-6 bg-white rounded-lg shadow">
@@ -63,11 +63,11 @@
                 <div class="mb-6">
                     <p v-if="selectedPackage">
                         <strong>{{ $t("label.selected_package") }}:</strong>
-                        {{ selectedPackage.name }} - {{ selectedPackage.points }} Points + {{ selectedPackage.bonus }} Bonus
+                        {{ selectedPackage.name }} - {{ selectedPackage.points }} VND + {{ selectedPackage.bonus }} Bonus
                     </p>
                     <p v-else>
                         <strong>{{ $t("label.entered_points") }}:</strong>
-                        {{ totalPoints }} Points
+                        {{ totalPoints }} VND
                     </p>
                 </div>
 
@@ -91,8 +91,8 @@
                 <!-- Payment Summary -->
                 <div class="mt-6">
                     <p class="font-bold">{{ $t("label.payment_summary") }}:</p>
-                    <p>{{ $t("label.total_points") }}: {{ totalPoints }}</p>
-                    <p>{{ $t("label.bonus_points") }}: {{ form.bonus_points }}</p>
+                    <p>{{ $t("label.total_points") }}: {{ totalPoints }} VND</p>
+                    <p>{{ $t("label.bonus_points") }}: {{ form.bonus_points }} VND</p>
                     <p>{{ $t("label.total_payment") }}: {{ totalPrice }} {{ currencySymbol }}</p>
                 </div>
 
@@ -136,9 +136,9 @@ export default {
             totalPrice: 0,
             selectedPackage: null,
             packages: [
-                { id: 1, name: "Package 1", points: 100, bonus: 10, price: 50000 },
-                { id: 2, name: "Package 2", points: 200, bonus: 20, price: 100000 },
-                { id: 3, name: "Package 3", points: 500, bonus: 50, price: 250000 },
+                { id: 1, name: "Nạp 50.000 Đ", points: 50000, bonus: 10000, price: 50000 },
+                { id: 2, name: "Nạp 100.000 Đ", points: 100000, bonus: 20000, price: 100000 },
+                { id: 3, name: "Nạp 250.000 Đ", points: 250000, bonus: 30000, price: 250000 },
             ],
             currencySymbol: "VND",
         };

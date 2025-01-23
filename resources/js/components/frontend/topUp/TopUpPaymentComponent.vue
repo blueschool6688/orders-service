@@ -10,11 +10,11 @@
                 </p>
                 <p>
                     <strong>{{ $t("label.points") }}:</strong>
-                    {{ paymentDetails.points }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                    {{ paymentDetails.points }} {{ currencySymbol }}
                 </p>
                 <p>
                     <strong>{{ $t("label.bonus_points") }}:</strong>
-                    {{ paymentDetails.bonus_points }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                    {{ paymentDetails.bonus_points }} {{ currencySymbol }}
                 </p>
                 <div v-if="paymentDetails.payment_method === 'bank_transfer' && paymentDetails.status !== 'success'" class="mt-6">
                     <img :src="qrCodeUrl" alt="QR Code" class="w-64 h-64 mx-auto" />

@@ -110,7 +110,7 @@
                                         </span>
                                         <span class="text-sm leading-6 capitalize">
                                             <template v-if="paymentMethod === 'pointPayment'">
-                                                {{ checkoutProps.form.point }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                                                {{ currencyFormat(checkoutProps.form.point, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
                                             </template>
                                             <template v-else>
                                                 {{ currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
@@ -124,7 +124,7 @@
                                     </h4>
                                     <h5 class="text-sm leading-6 font-semibold capitalize">
                                         <template v-if="paymentMethod === 'pointPayment'">
-                                            {{ checkoutProps.form.point }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i>
+                                            {{ currencyFormat(checkoutProps.form.point, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
                                         </template>
                                         <template v-else>
                                             {{ currencyFormat(subtotal, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}

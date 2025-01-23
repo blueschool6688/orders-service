@@ -5736,8 +5736,8 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     width: 50%;
   }
 
-  .sm\:w-40 {
-    width: 10rem;
+  .sm\:w-16 {
+    width: 4rem;
   }
 
   .sm\:w-60 {
@@ -5755,10 +5755,6 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
   .sm\:w-fit {
     width: -moz-fit-content;
     width: fit-content;
-  }
-
-  .sm\:w-16 {
-    width: 4rem;
   }
 
   .sm\:flex-1 {

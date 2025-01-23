@@ -4,10 +4,9 @@
     <header class="shadow-xs bg-white ff-header"  ref="ffHeader">
         <div class="container flex flex-col lg:flex-row items-center justify-between">
             <div class="w-full flex items-center justify-between gap-3 xl:gap-8 lg:justify-start lg:w-fit">
-                <router-link :to="{ name: 'table.menu.table'}"
-                    class="flex-shrink-0 logo-img">
+                <a href="https://hoi.com.vn/" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 logo-img">
                     <img class="w-12 sm:w-16" :src="setting.theme_logo" alt="logo">
-                </router-link>
+                </a>
 
                 <!-- This code for mobile device -->
                 <div class="flex items-center gap-3">
@@ -44,7 +43,7 @@
                         <div class="flex flex-col gap-1 items-center justify-center">
                             <p class="text-xs mb-0.5">{{ clientInfo.email }}</p>
                             <p dir="ltr" class="text-xs">{{ clientInfo.country_code }} {{ clientInfo.phone }}</p>
-                            <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i></h3>
+                            <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} {{setting.site_default_currency_symbol}}</h3>
                         </div>
                         <nav>
                             <router-link @click="closeMobileMenu" :to="{ name: 'client.topup' }"
@@ -204,7 +203,7 @@
                                 </h3>
                                 <p class="text-xs mb-0.5">{{ clientInfo.email }}</p>
                                 <p dir="ltr" class="text-xs">{{ clientInfo.country_code }} {{ clientInfo.phone }}</p>
-                                <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} <i class="fa-solid fa-coin-vertical text-[#d1992c]"></i></h3>
+                                <h3 class="font-medium text-sm leading-6 capitalize mb-0.5">{{ clientInfo.balance }} {{setting.site_default_currency_symbol}}</h3>
                             </div>
                             <nav>
                                 <router-link @click="closeMobileMenu" :to="{ name: 'client.topup' }"

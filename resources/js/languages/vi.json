@@ -77,7 +77,7 @@
         "dining_tables": "Bàn ăn",
         "table_orders": "Đơn hàng tại bàn",
         "table-orders": "Đơn hàng tại bàn",
-        "point_exchange_rate": "Tỉ giá quy đổi điểm",
+        "point_exchange_rate": "Tỉ giá quy đổi tiền nạp",
         "ingredients": "Nguyên liệu"
     },
     "label": {
@@ -89,21 +89,21 @@
         "select_ingredient": "Chọn nguyên liệu",
         "ingredient_max_quantity": "Ngưỡng báo động",
         "ingredient_unit": "Đơn vị",
-        "point_payment": "Thanh toán bằng điểm",
+        "point_payment": "Thanh toán bằng số dư tài khoản",
         "payment_success": "Thanh toán thành công",
         "scan_to_pay": "Quét để thanh toán",
         "payment_details": "Thông tin thanh toán",
         "selected_package": "Gói đã chọn",
         "payment_amount": "Số tiền phải thanh toán",
         "total_payment": "Tổng thanh toán",
-        "total_points": "Tổng điểm",
+        "total_points": "Tổng tiền nạp",
         "payment_summary": "Chi tiết thanh toán",
         "bank_transfer": "Chuyển khoản ngân hàng",
         "payment_methods": "Phương thức thanh toán",
-        "entered_points": "Điểm đã nhập",
-        "select_package": "Chọn gói điểm",
-        "bonus_points": "Điểm khuyến mãi",
-        "points": "Điểm",
+        "entered_points": "Gói đã chọn",
+        "select_package": "Chọn gói nạp",
+        "bonus_points": "Khuyến mãi",
+        "points": "Tiền nạp",
         "enter_points": "Nhập số điểm quy đổi",
         "email_or_phone": "Email hoặc Số điện thoại",
         "or_continue_with": "Hoặc tiếp tục với",
@@ -164,7 +164,7 @@
         "image": "Hình ảnh",
         "save": "Lưu",
         "cancel": "Hủy",
-        "amount": "Số lượng",
+        "amount": "Thanh toán",
         "price": "Giá",
         "start_date": "Ngày bắt đầu",
         "end_date": "Ngày kết thúc",
@@ -588,7 +588,7 @@
         "mobile_banking": "Chuyển khoản Online",
         "order_total": "Giá trị đơn hàng",
         "update_password": "Cập nhật mật khẩu",
-        "unit": "Điểm",
+        "unit": "Tiền nạp",
         "rate": "Tỉ giá quy đổi"
     },
     "button": {
@@ -683,7 +683,7 @@
         "pdf": "PDF",
         "continue_with_google": "Tiếp tục với google",
         "update_password": "Cập nhật mật khẩu",
-        "top_up": "Nạp điểm"
+        "top_up": "Nạp tiền"
     },
     "number": {
         "10": "10",
