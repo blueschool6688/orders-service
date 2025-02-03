@@ -5,8 +5,10 @@ namespace App\Services;
 
 use App\Enums\Ask;
 use App\Enums\Status;
+use Carbon\Carbon;
 use Exception;
 use App\Models\Item;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\ItemVariation;
 use App\Http\Requests\ItemRequest;
@@ -217,10 +219,53 @@ class ItemService
         }
     }
 
-    public function mostPopularItems()
+    public function mostPopularItems(Request $request)
     {
         try {
-            return Item::withCount('orders')->where(['status' => Status::ACTIVE])->orderBy('orders_count', 'desc')->limit(6)->get();
+            $first_date = $request->first_date ? date('Y-m-d', strtotime($request->first_date)) : date('Y-01-01');
+            $last_date  = $request->last_date ? date('Y-m-d', strtotime($request->last_date)) : date('Y-12-31');
+            $timeArray = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
+                "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00",
+                "22:00", "23:00"];
+
+            $popularItemsArray = [];
+            $totalOrdersArray = [];
+            $items = Item::select('items.id', 'items.name')
+                ->join('order_items', 'order_items.item_id', '=', 'items.id')
+                ->join('orders', 'orders.id', '=', 'order_items.order_id')
+                ->where('items.status', Status::ACTIVE)
+                ->whereBetween('orders.order_datetime', [$first_date, $last_date])
+                ->groupBy('items.id', 'items.name')
+                ->selectRaw('COUNT(order_items.id) as total_sold')
+                ->orderByDesc('total_sold')
+                ->limit(10)
+                ->get();
+
+            foreach ($items as $item) {
+                $orderCounts = [];
+                foreach ($timeArray as $time) {
+                    $first_time = date('H:i', strtotime($time));
+                    $last_time = date('H:i', strtotime($time . ' +59 minutes'));
+                    $total_orders = DB::table('orders')
+                        ->join('order_items', 'order_items.order_id', '=', 'orders.id')
+                        ->where('order_items.item_id', $item->id)
+                        ->whereBetween('orders.order_datetime', [$first_date, $last_date])
+                        ->whereTime('orders.order_datetime', '>=', Carbon::parse($first_time))
+                        ->whereTime('orders.order_datetime', '<=', Carbon::parse($last_time))
+                        ->count();
+
+                    $orderCounts[] = $total_orders;
+                }
+
+                $popularItemsArray[] = [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'total_sold' => array_sum($orderCounts),
+                ];
+                $totalOrdersArray[] = array_sum($orderCounts);
+            }
+
+            return $popularItemsArray;
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception($exception->getMessage(), 422);

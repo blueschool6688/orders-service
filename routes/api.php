@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Admin\TopUpPackageController;
 use App\Http\Controllers\Frontend\TopUpController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -266,7 +267,12 @@ Route::prefix('admin')->name('admin.')->middleware(['installed', 'apiKey', 'auth
             Route::match(['post', 'put', 'patch'], '/{page}', [PageController::class, 'update']);
             Route::delete('/{page}', [PageController::class, 'destroy']);
         });
-
+        Route::prefix('topup-package')->name('topup-package.')->group(function () {
+            Route::get('/', [TopupPackageController::class, 'index']);
+            Route::post('/', [TopupPackageController::class, 'store']);
+            Route::match(['post', 'put', 'patch'], '/{topupPackage}', [TopUpPackageController::class, 'update']);
+            Route::delete('/{topupPackage}', [TopUpPackageController::class, 'destroy']);
+        });
         Route::prefix('license')->name('license.')->group(function () {
             Route::get('/', [LicenseController::class, 'index']);
             Route::match(['put', 'patch'], '/', [LicenseController::class, 'update']);
@@ -614,6 +620,7 @@ Route::prefix('country-code')->name('country-code.')->group(function () {
 });
 
 Route::middleware(['auth:sanctum-client'])->prefix('topup')->name('topup.')->group(function () {
+    Route::get('/list', [TopupController::class, 'list']);
     Route::post('/exchange', [TopupController::class, 'exchange']);
 
     Route::post('/create-request', [TopupController::class, 'createRequest']);

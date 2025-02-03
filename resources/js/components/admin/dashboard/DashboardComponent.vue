@@ -23,7 +23,7 @@
         <!--========CUSTOMER STATS END=============-->
 
         <!--========FEATURED ITEMS START=============-->
-        <FeaturedItemsComponent />
+<!--        <FeaturedItemsComponent />-->
         <!--========FEATURED ITEMS END=============-->
 
         <!--========MOST POPULAR ITEMS START=============-->

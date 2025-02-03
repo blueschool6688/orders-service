@@ -1,5 +1,6 @@
 {
     "menu": {
+        "topup_package": "Top Up Package",
         "scan": "Scan",
         "dashboard": "Dashboard",
         "settings": "Settings",
@@ -81,6 +82,9 @@
         "ingredients" : "Ingredients"
     },
     "label": {
+        "value": "Value",
+        "bonus": "Bonus",
+        "no_data_available": "No data available",
         "subtract": "Subtract",
         "add": "Add",
         "change_type" : "Change type",
@@ -593,6 +597,7 @@
         "rate": "Exchange Rate"
     },
     "button": {
+        "add_package": "Add package",
         "remove": "Remove",
         "add_ingredient": "Add Ingredient",
         "confirm_payment": "Confirm payment",

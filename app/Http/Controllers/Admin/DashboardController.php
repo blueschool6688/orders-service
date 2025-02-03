@@ -13,6 +13,7 @@ use App\Http\Resources\OrderSummaryResource;
 use App\Http\Resources\SalesSummaryResource;
 use App\Http\Resources\CustomerStatesResource;
 use App\Http\Resources\OrderStatisticsResource;
+use Illuminate\Http\Response;
 
 class DashboardController extends AdminController
 {
@@ -104,10 +105,14 @@ class DashboardController extends AdminController
         }
     }
 
-    public function mostPopularItems(): \Illuminate\Http\Response | \Illuminate\Http\Resources\Json\AnonymousResourceCollection | \Illuminate\Contracts\Foundation\Application | \Illuminate\Contracts\Routing\ResponseFactory
+    public function mostPopularItems(Request $request): \Illuminate\Http\Response | \Illuminate\Http\Resources\Json\AnonymousResourceCollection | \Illuminate\Contracts\Foundation\Application | \Illuminate\Contracts\Routing\ResponseFactory
     {
         try {
-            return ItemResource::collection($this->itemService->mostPopularItems());
+            $mostPopularItems = $this->itemService->mostPopularItems($request);
+            return new Response([
+                'status' => true,
+                'data' => $mostPopularItems ?? [],
+            ]);
         } catch (Exception $exception) {
             return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }

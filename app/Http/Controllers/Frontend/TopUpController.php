@@ -6,6 +6,7 @@ use App\Events\OrderPaymentUpdated;
 use App\Events\UpdateUserPoint;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderDetailsResource;
+use App\Http\Resources\TopUpPackageResource;
 use App\Http\Resources\UserResource;
 use App\Libraries\AppLibrary;
 use App\Models\Order;
@@ -13,6 +14,7 @@ use App\Models\PointExchangeRate;
 use App\Models\PointTransaction;
 use App\Models\TopUpTransaction;
 use App\Models\User;
+use App\Services\TopUpPackageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,9 +22,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
-
+use App\Http\Requests\PaginateRequest;
 class TopUpController extends Controller
 {
+    private TopUpPackageService $topUpPackageService;
+    public function __construct(TopUpPackageService $topUpPackageService){
+        $this->topUpPackageService = $topUpPackageService;
+    }
     public function exchange(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -252,6 +258,15 @@ class TopUpController extends Controller
                 'status'=>false,
                 'message'=>$exception->getMessage(),
             ]);
+        }
+    }
+
+    public function list(PaginateRequest $request)
+    {
+        try {
+            return TopUpPackageResource::collection($this->topUpPackageService->list($request));
+        } catch (\Exception $exception) {
+            return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }
     }
 }

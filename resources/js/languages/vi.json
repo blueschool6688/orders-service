@@ -1,5 +1,6 @@
 {
     "menu": {
+        "topup_package": "Gói nạp",
         "scan": "Quét mã",
         "dashboard": "Bảng điều khiển",
         "settings": "Cài đặt",
@@ -81,6 +82,9 @@
         "ingredients": "Nguyên liệu"
     },
     "label": {
+        "value": "Giá trị",
+        "bonus": "Thưởng thêm",
+        "no_data_available": "Không có dữ liệu để hiển thị",
         "subtract": "Trừ",
         "add": "Thêm",
         "change_type" : "Hành động",
@@ -592,6 +596,7 @@
         "rate": "Tỉ giá quy đổi"
     },
     "button": {
+        "add_package": "Thêm gói",
         "remove": "Bỏ",
         "add_ingredient": "Thêm nguyên liệu",
         "confirm_payment": "Xác nhận thanh toán",

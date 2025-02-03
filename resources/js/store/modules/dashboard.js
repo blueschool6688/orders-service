@@ -148,10 +148,14 @@ export const dashboard = {
                     });
             });
         },
-        mostPopularItems: function (context) {
+        mostPopularItems: function (context,payload) {
             return new Promise((resolve, reject) => {
+                let url = "admin/dashboard/popular-items";
+                if (payload) {
+                    url = url + appService.requestHandler(payload);
+                }
                 axios
-                    .get("admin/dashboard/popular-items")
+                    .get(url)
                     .then((res) => {
                         context.commit("mostPopularItems", res.data.data);
                         resolve(res);

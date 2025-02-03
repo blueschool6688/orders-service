@@ -34,6 +34,8 @@ import SmsGatewayComponent from "../../components/admin/settings/SmsGateway/SmsG
 import NotificationAlertComponent from "../../components/admin/settings/NotificationAlert/NotificationAlertComponent";
 import NotificationComponent from "../../components/admin/settings/Notification/NotificationComponent";
 import PointComponent from "../../components/admin/settings/Point/PointComponent.vue";
+import TopUpPackageComponent from "../../components/admin/settings/TopUpPackage/TopUpPackageComponent.vue";
+import TopUpPackageListComponent from "../../components/admin/settings/TopUpPackage/TopUpPackageListComponent.vue";
 
 export default [
     {
@@ -460,6 +462,31 @@ export default [
                     permissionUrl: "settings",
                     breadcrumb: "point_exchange_rate"
                 }
+            },
+            {
+                path:"topup-package",
+                name:"admin.settings.topup_package",
+                component: TopUpPackageComponent,
+                redirect: { name: "admin.settings.topup_package.list" },
+                meta: {
+                    isFrontend: false,
+                    auth: true,
+                    permissionUrl: "settings",
+                    breadcrumb: "topup_package"
+                },
+                children: [
+                    {
+                        path: "list",
+                        component: TopUpPackageListComponent,
+                        name: "admin.settings.topup_package.list",
+                        meta: {
+                            isFrontend: false,
+                            auth: true,
+                            permissionUrl: "settings",
+                            breadcrumb: "",
+                        },
+                    },
+                ],
             }
         ],
     },

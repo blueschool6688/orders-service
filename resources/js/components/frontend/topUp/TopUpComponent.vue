@@ -135,23 +135,35 @@ export default {
             },
             totalPrice: 0,
             selectedPackage: null,
-            packages: [
-                { id: 1, name: "Nạp 50.000 Đ", points: 50000, bonus: 10000, price: 50000 },
-                { id: 2, name: "Nạp 100.000 Đ", points: 100000, bonus: 20000, price: 100000 },
-                { id: 3, name: "Nạp 250.000 Đ", points: 250000, bonus: 30000, price: 250000 },
-            ],
             currencySymbol: "VND",
         };
     },
     computed: {
         totalPoints() {
-            return this.form.points + this.form.bonus_points; // Calculate total points
+            return this.form.points + this.form.bonus_points;
         },
         isDisabled() {
             return this.form.points <= 0 || this.loading.isActive;
         },
+        packages() {
+            return this.$store.getters["point/lists"].filter(pack => pack.status !== 10);
+        }
+    },
+    mounted() {
+        this.list()
     },
     methods: {
+        list:function(){
+            this.loading.isActive = true;
+            this.$store
+                .dispatch("point/lists")
+                .then((res) => {
+                    this.loading.isActive = false;
+                })
+                .catch((err) => {
+                    this.loading.isActive = false;
+                });
+        },
         debouncedUpdateExchange: debounce(function () {
             this.updateExchange();
         }, 300),

@@ -69,6 +69,7 @@ import { notification } from './modules/notification';
 import {frontendBanner} from "./modules/frontend/frontendBanner";
 import {point} from "./modules/point";
 import {ingredient} from "./modules/ingredient";
+import {topupPackage} from "./modules/topupPackage";
 
 export default new createStore({
     state: {},
@@ -142,7 +143,8 @@ export default new createStore({
         notificationAlert,
         notification,
         point,
-        ingredient
+        ingredient,
+        topupPackage
     },
     plugins: [
         createPersistedState({

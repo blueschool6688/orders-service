@@ -74,6 +74,10 @@
                 <i class="fa-sharp-duotone fa-solid fa-arrow-right-arrow-left"></i>
                 {{ $t("menu.point_exchange_rate") }}
             </router-link>
+            <router-link :to="{ name: 'admin.settings.topup_package' }" class="db-tab-btn">
+                <i class="fa-sharp fa-regular fa-box-open"></i>
+                {{ $t("menu.topup_package") }}
+            </router-link>
 <!--            <router-link :to="{ name: 'admin.settings.smsGateway' }" class="db-tab-btn">-->
 <!--                <i class="lab lab-sms text-sm"></i>-->
 <!--                {{ $t("menu.sms_gateway") }}-->
