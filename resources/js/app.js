@@ -50,7 +50,7 @@ const BANK_NUMBER = window.APP_CONFIG?.BANK_NUMBER || ENV.BANK_NUMBER;
 const BANK_NAME = window.APP_CONFIG?.BANK_NAME || ENV.BANK_NAME;
 const BANK_PREFIX = window.APP_CONFIG?.BANK_PREFIX || ENV.BANK_PREFIX;
 const BANK_CONTENT = window.APP_CONFIG?.BANK_CONTENT || ENV.BANK_CONTENT;
-axios.defaults.baseURL = API_URL + '/api';
+axios.defaults.baseURL = '/api';
 axios.interceptors.request.use(
     config => {
         config.headers['x-api-key'] = API_KEY;
