@@ -53,7 +53,7 @@ const BANK_CONTENT = window.APP_CONFIG?.BANK_CONTENT || ENV.BANK_CONTENT;
 axios.defaults.baseURL = '/api';
 axios.interceptors.request.use(
     config => {
-        config.headers['x-api-key'] = API_KEY;
+        config.headers['x-api-key'] = API_KEY || "ebc57e0b-8308-41e2-8932-9ad69c405f20";
         if (localStorage.getItem('vuex')) {
             const vuex = JSON.parse(localStorage.getItem('vuex'));
             const token = vuex.auth.authToken;
