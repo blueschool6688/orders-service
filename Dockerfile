@@ -5,7 +5,7 @@ FROM node:18-alpine AS fe
 WORKDIR /app
 COPY package.json package-lock.json* ./
 # Dùng npm ci giúp build nhanh hơn và đảm bảo chính xác phiên bản packages
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
