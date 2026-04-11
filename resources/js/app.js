@@ -37,19 +37,19 @@ const options = {
 
 
 /* Start axios code*/
-const API_URL = ENV.API_URL;
-const API_KEY = ENV.API_KEY;
+const API_URL = window.APP_CONFIG?.API_URL || ENV.API_URL;
+const API_KEY = window.APP_CONFIG?.API_KEY || ENV.API_KEY;
 
-/* PUSHER & BROADCAST */
-const PUSHER_APP_KEY = window.APP_CONFIG?.PUSHER_APP_KEY || 'ac31785db1e8f2394e9c';
-const PUSHER_APP_CLUSTER = window.APP_CONFIG?.PUSHER_APP_CLUSTER || 'ap1'
-const PUSHER_HOST = ENV.PUSHER_HOST
-const PUSHER_PORT = ENV.PUSHER_PORT
-const PUSHER_SCHEME = ENV.PUSHER_SCHEME
-const BANK_NUMBER = ENV.BANK_NUMBER
-const BANK_NAME = ENV.BANK_NAME
-const BANK_PREFIX = ENV.BANK_PREFIX
-const BANK_CONTENT = ENV.BANK_CONTENT
+/* PUSHER & BROADCAST & BANKING */
+const PUSHER_APP_KEY = window.APP_CONFIG?.PUSHER_APP_KEY || ENV.PUSHER_APP_KEY || 'ac31785db1e8f2394e9c';
+const PUSHER_APP_CLUSTER = window.APP_CONFIG?.PUSHER_APP_CLUSTER || ENV.PUSHER_APP_CLUSTER || 'ap1';
+const PUSHER_HOST = window.APP_CONFIG?.PUSHER_HOST || ENV.PUSHER_HOST;
+const PUSHER_PORT = window.APP_CONFIG?.PUSHER_PORT || ENV.PUSHER_PORT;
+const PUSHER_SCHEME = window.APP_CONFIG?.PUSHER_SCHEME || ENV.PUSHER_SCHEME;
+const BANK_NUMBER = window.APP_CONFIG?.BANK_NUMBER || ENV.BANK_NUMBER;
+const BANK_NAME = window.APP_CONFIG?.BANK_NAME || ENV.BANK_NAME;
+const BANK_PREFIX = window.APP_CONFIG?.BANK_PREFIX || ENV.BANK_PREFIX;
+const BANK_CONTENT = window.APP_CONFIG?.BANK_CONTENT || ENV.BANK_CONTENT;
 axios.defaults.baseURL = API_URL + '/api';
 axios.interceptors.request.use(
     config => {
@@ -71,17 +71,14 @@ axios.interceptors.request.use(
 
 window.Pusher = Pusher;
 
-;
-// ... tương tự cho các biến khác
-
 window.Echo = new Echo({
     broadcaster: 'pusher',
     cluster: PUSHER_APP_CLUSTER,
     key: PUSHER_APP_KEY,
-    wsHost: window.APP_CONFIG?.PUSHER_HOST ?? `ws-${PUSHER_APP_CLUSTER}.pusher.com`,
-    wsPort: window.APP_CONFIG?.PUSHER_PORT ?? 80,
-    wssPort: window.APP_CONFIG?.PUSHER_PORT ?? 443,
-    forceTLS: (window.APP_CONFIG?.PUSHER_SCHEME ?? 'https') === 'https',
+    wsHost: PUSHER_HOST || `ws-${PUSHER_APP_CLUSTER}.pusher.com`,
+    wsPort: PUSHER_PORT || 80,
+    wssPort: PUSHER_PORT || 443,
+    forceTLS: (PUSHER_SCHEME || 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
 
