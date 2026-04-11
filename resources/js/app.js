@@ -3,7 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import DefaultComponent from "./components/DefaultComponent";
 import router from './router';
 import store from './store';
@@ -41,9 +41,9 @@ const API_URL = ENV.API_URL;
 const API_KEY = ENV.API_KEY;
 
 /* PUSHER & BROADCAST */
-const PUSHER_APP_KEY = ENV.PUSHER_APP_KEY
+const PUSHER_APP_KEY = window.APP_CONFIG?.PUSHER_APP_KEY || 'ac31785db1e8f2394e9c';
+const PUSHER_APP_CLUSTER = window.APP_CONFIG?.PUSHER_APP_CLUSTER || 'ap1'
 const PUSHER_HOST = ENV.PUSHER_HOST
-const PUSHER_APP_CLUSTER = ENV.PUSHER_APP_CLUSTER
 const PUSHER_PORT = ENV.PUSHER_PORT
 const PUSHER_SCHEME = ENV.PUSHER_SCHEME
 const BANK_NUMBER = ENV.BANK_NUMBER
@@ -71,17 +71,19 @@ axios.interceptors.request.use(
 
 window.Pusher = Pusher;
 
+;
+// ... tương tự cho các biến khác
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    cluster:PUSHER_APP_CLUSTER,
+    cluster: PUSHER_APP_CLUSTER,
     key: PUSHER_APP_KEY,
-    wsHost: PUSHER_HOST ?? `ws-${PUSHER_APP_CLUSTER}.pusher.com`,
-    wsPort: PUSHER_PORT ?? 80,
-    wssPort: PUSHER_PORT ?? 443,
-    forceTLS: (PUSHER_SCHEME ?? 'https') === 'https',
+    wsHost: window.APP_CONFIG?.PUSHER_HOST ?? `ws-${PUSHER_APP_CLUSTER}.pusher.com`,
+    wsPort: window.APP_CONFIG?.PUSHER_PORT ?? 80,
+    wssPort: window.APP_CONFIG?.PUSHER_PORT ?? 443,
+    forceTLS: (window.APP_CONFIG?.PUSHER_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
-
 
 
 
