@@ -7,7 +7,7 @@ COPY package.json package-lock.json* ./
 # Dùng npm ci giúp build nhanh hơn và đảm bảo chính xác phiên bản packages
 RUN npm install
 COPY . .
-RUN npm run production
+RUN npm run prod
 
 # ==========================================
 # STEP 2: Build Backend & Production Server (PHP + Apache)
