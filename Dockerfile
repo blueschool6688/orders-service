@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl opcache \
+    # Thêm exif vào đây để fix lỗi thiếu ext-exif cho thư viện spatie/image
+    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl opcache exif \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -47,8 +48,8 @@ COPY . /var/www/html
 
 # Copy Composer từ image chính thức vào dùng trực tiếp
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-# Cài đặt thư viện backend trực tiếp trong container này
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist \
+# Thêm --ignore-platform-req=ext-http để bỏ qua bắt buộc cài ext-http (rất nặng và thường dư thừa với Guzzle)
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-req=ext-http \
     && composer dump-autoload --optimize
 
 # Copy mã nguồn frontend từ STEP 1 (fe) chuyển sang
