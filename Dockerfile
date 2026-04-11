@@ -1,32 +1,24 @@
 # ==========================================
-# GIAI ĐOẠN 1: Build Frontend (VueJS / Vite)
+# STEP 1: Build Frontend (VueJS / Vite)
 # ==========================================
-FROM node:18-alpine AS frontend
+FROM node:18-alpine AS fe
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install
+# Dùng npm ci giúp build nhanh hơn và đảm bảo chính xác phiên bản packages
+RUN npm ci
 COPY . .
 RUN npm run build
 
 # ==========================================
-# GIAI ĐOẠN 2: Cài đặt thư viện Backend (Composer)
+# STEP 2: Build Backend & Production Server (PHP + Apache)
 # ==========================================
-FROM composer:2.6 AS backend
-WORKDIR /app
-COPY composer.json composer.lock* ./
-# Cài đặt thư viện bỏ qua các script chưa cần thiết
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
-COPY . .
-# Tạo file autoload tối ưu cho production
-RUN composer dump-autoload --optimize
+FROM php:8.2-apache AS be
 
-# ==========================================
-# GIAI ĐOẠN 3: Đóng gói Server chạy thực tế (PHP + Apache)
-# ==========================================
-FROM php:8.2-apache
+# Sử dụng file cấu hình php.ini tối ưu sẵn cho môi trường production
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# 1. Cài đặt các thư viện hệ thống và PHP Extensions cần thiết cho Laravel
-RUN apt-get update && apt-get install -y \
+# Cài đặt các thư viện hệ thống (thêm git, unzip để chạy Composer) và PHP Extensions cần thiết cho Laravel
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -34,26 +26,37 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip \
     unzip \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl
+    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# 2. Bật mod_rewrite của Apache (Bắt buộc để URL của Laravel hoạt động)
+# Bật mod_rewrite của Apache
 RUN a2enmod rewrite
 
-# 3. Đổi thư mục gốc của Apache trỏ thẳng vào thư mục /public của Laravel
+# Đổi thư mục gốc của Apache trỏ thẳng vào /public của Laravel
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www/html
 
-# 4. Copy mã nguồn từ Giai đoạn 1 và 2 sang
-COPY --from=backend /app /var/www/html
-COPY --from=frontend /app/public /var/www/html/public
+# Copy toàn bộ mã nguồn vào
+COPY . /var/www/html
 
-# 5. Phân quyền cho thư mục Storage và Bootstrap Cache để Laravel có thể ghi file
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Copy Composer từ image chính thức vào dùng trực tiếp
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+# Cài đặt thư viện backend trực tiếp trong container này
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist \
+    && composer dump-autoload --optimize
 
-# 6. Mở port 80
+# Copy mã nguồn frontend từ STEP 1 (fe) chuyển sang
+COPY --from=fe /app/public /var/www/html/public
+
+# Phân quyền cho Storage và Bootstrap Cache để Laravel có thể ghi file
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Mở port 80
 EXPOSE 80
