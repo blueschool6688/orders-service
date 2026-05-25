@@ -47,22 +47,27 @@ class ItemService
             $orderType   = $request->get('order_type') ?? 'desc';
 
             return Item::with('media', 'category', 'tax')->where(function ($query) use ($requests) {
-                foreach ($requests as $key => $request) {
-                    if (in_array($key, $this->itemFilter)) {
-                        if ($key == "except") {
-                            $explodes = explode('|', $request);
-                            if (count($explodes)) {
-                                foreach ($explodes as $explode) {
-                                    $query->where('id', '!=', $explode);
-                                }
-                            }
-                        } else {
-                            if ($key == "item_category_id") {
-                                $query->where($key, $request);
-                            } else {
-                                $query->where($key, 'like', '%' . $request . '%');
-                            }
+                // Các field dạng số/trạng thái nên dùng match chính xác (kích hoạt index trong DB) không nên dùng LIKE
+                $exactMatchFields = ['item_category_id', 'price', 'is_featured', 'item_type', 'tax_id', 'status', 'order'];
+
+                foreach ($requests as $key => $value) {
+                    // Bỏ qua nếu ko được phép filter hoặc gía trị rỗng
+                    if (!in_array($key, $this->itemFilter) || $value === null || $value === '') {
+                        continue;
+                    }
+
+                    if ($key == "except") {
+                        // Tối ưu nhiều where() != thành dùng 1 query whereNotIn nhẹ hơn hẳn
+                        $explodes = array_filter(explode('|', $value));
+                        if (!empty($explodes)) {
+                            $query->whereNotIn('id', $explodes);
                         }
+                    } elseif (in_array($key, $exactMatchFields)) {
+                        // Tìm đúng chính xác (=)
+                        $query->where($key, $value);
+                    } else {
+                        // Dành cho các cột dạng chữ cần tìm kiếm chuỗi tương đối (name, slug, description)
+                        $query->where($key, 'like', '%' . $value . '%');
                     }
                 }
             })->orderBy($orderColumn, $orderType)->$method(
