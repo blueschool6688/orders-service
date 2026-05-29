@@ -5,7 +5,7 @@ FROM node:18-alpine AS fe
 WORKDIR /app
 COPY package.json package-lock.json* ./
 # Dùng npm ci giúp build nhanh hơn và đảm bảo chính xác phiên bản packages
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run prod
 
@@ -58,6 +58,11 @@ COPY --from=fe /app/public /var/www/html/public
 # Phân quyền cho Storage và Bootstrap Cache để Laravel có thể ghi file
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+RUN php artisan optimize:clear
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
 # Mở port 80
 EXPOSE 80
