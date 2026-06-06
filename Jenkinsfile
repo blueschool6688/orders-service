@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
+        stage('Build BACKEND') {
             steps {
                 sh 'php artisan optimize:clear'
             }
