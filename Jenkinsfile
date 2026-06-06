@@ -25,7 +25,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs'
-                sh 'pnpm install --frozen-lockfile'
+                sh 'pnpm install --no-frozen-lockfile'
             }
         }
 
