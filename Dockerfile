@@ -4,8 +4,8 @@
 FROM node:18-alpine AS fe
 WORKDIR /app
 COPY package.json package-lock.json* ./
-# Dùng npm ci giúp build nhanh hơn và đảm bảo chính xác phiên bản packages
-RUN npm ci
+# Dùng npm install thay vì npm ci để tránh lỗi nếu package-lock.json không đồng bộ với package.json
+RUN npm install
 COPY . .
 RUN npm run prod
 
@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN a2enmod rewrite
 
 # Đổi thư mục gốc của Apache trỏ thẳng vào /public của Laravel
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
