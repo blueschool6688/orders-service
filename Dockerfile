@@ -1,6 +1,3 @@
-# ==========================================
-# STEP 1: Build Frontend (VueJS / Vite)
-# ==========================================
 FROM node:18-alpine AS fe
 WORKDIR /app
 COPY package.json package-lock.json* ./
@@ -9,10 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run prod
 
-# ==========================================
-# STEP 2: Build Backend & Production Server (PHP + Apache)
-# ==========================================
-FROM php:8.2-apache AS be
+FROM php:8.2-fpm AS be
 
 # Sử dụng file cấu hình php.ini tối ưu sẵn cho môi trường production
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -32,14 +26,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl opcache exif \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Bật mod_rewrite của Apache
-RUN a2enmod rewrite
-
-# Đổi thư mục gốc của Apache trỏ thẳng vào /public của Laravel
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www/html
 
@@ -64,5 +50,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # RUN php artisan route:cache
 # RUN php artisan view:cache
 
-# Mở port 80
-EXPOSE 80
+# Mở port 9000 cho PHP-FPM
+EXPOSE 9000
