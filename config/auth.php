@@ -75,20 +75,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
-            'filter' => function ($query) {
-                $query->whereHas('roles', function ($roleQuery) {
-                    $roleQuery->where('id', '!=', 2);
-                });
-            },
         ],
         'clients' => [
             'driver' => 'eloquent',
             'model'=> App\Models\User::class,
-            'filter' => function ($query) {
-                $query->whereHas('roles', function ($roleQuery) {
-                    $roleQuery->where('id', '=', 2);
-                });
-            },
         ]
         // 'users' => [
         //     'driver' => 'database',

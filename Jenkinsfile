@@ -10,7 +10,6 @@ pipeline {
     environment {
         DOCKER_BUILDKIT = '1'
         IMAGE_NAME = 'thanhtruong123/orders' 
-        // Nếu user nhập version thì dùng version đó, nếu không thì lấy BUILD_NUMBER
         IMAGE_TAG = "${params.IMAGE_VERSION ?: env.BUILD_NUMBER}"
     }
 
