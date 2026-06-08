@@ -2,15 +2,10 @@ pipeline {
     agent {
         label 'jenkins-agent'
     }
-
-    parameters {
-        string(name: 'IMAGE_VERSION', defaultValue: '', description: 'Nhập Version cho Image (VD: v1.0.0). Nếu để trống, hệ thống sẽ tự dùng số Build Number.')
-    }
-
     environment {
         DOCKER_BUILDKIT = '1'
         IMAGE_NAME = 'thanhtruong123/orders' 
-        IMAGE_TAG = "${params.IMAGE_VERSION ?: env.BUILD_NUMBER}"
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
     stages {
