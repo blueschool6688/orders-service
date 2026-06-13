@@ -6,28 +6,37 @@ RUN npm install
 COPY . .
 RUN npm run prod
 
-FROM php:8.2-fpm AS be
+# CHUYỂN TỪ DEBIAN SANG ALPINE ĐỂ TỐI ƯU DUNG LƯỢNG (Giảm từ ~400MB xuống còn ~80-100MB)
+FROM php:8.2-fpm-alpine AS be
 
 # Sử dụng file cấu hình php.ini tối ưu sẵn cho môi trường production
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# Cài đặt các thư viện hệ thống (thêm git, unzip để chạy Composer) và PHP Extensions cần thiết cho Laravel
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Cài đặt Nginx, Supervisor và các thư viện runtime (không kèm header code)
+RUN apk add --no-cache \
     nginx \
     supervisor \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libpq-dev \
+    freetype \
+    libjpeg-turbo \
+    libpng \
+    libzip \
+    postgresql-libs \
     zip \
     unzip \
     git \
+    bash \
+    # Gom các thư viện -dev vào nhóm .build-deps để cài tạm thời phục vụ việc compile
+    && apk add --no-cache --virtual .build-deps \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libzip-dev \
+    postgresql-dev \
+    # Compile PHP Extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    # Thêm exif vào đây để fix lỗi thiếu ext-exif cho thư viện spatie/image
     && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip bcmath pcntl opcache exif \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    # QUAN TRỌNG: Xóa toàn bộ file -dev, source code rác sau khi compile xong để giảm dung lượng
+    && apk del .build-deps
 
 WORKDIR /var/www/html
 
@@ -36,7 +45,7 @@ COPY . /var/www/html
 
 # Copy Composer từ image chính thức vào dùng trực tiếp
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-# Thêm --ignore-platform-req=ext-http để bỏ qua bắt buộc cài ext-http (rất nặng và thường dư thừa với Guzzle)
+# Thêm --ignore-platform-req=ext-http để bỏ qua bắt buộc cài ext-http
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-req=ext-http \
     && composer dump-autoload --optimize
 
@@ -47,12 +56,9 @@ COPY --from=fe /app/public /var/www/html/public
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# RUN php artisan optimize:clear
-# RUN php artisan config:cache
-# RUN php artisan route:cache
-# RUN php artisan view:cache
-# Copy cấu hình Nginx và Supervisor vào container
-COPY docker/nginx.conf /etc/nginx/sites-available/default
+# COPY cấu hình Nginx và Supervisor vào container
+# Nginx trên Alpine dùng thư mục http.d thay vì sites-available
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/log/supervisor
 
