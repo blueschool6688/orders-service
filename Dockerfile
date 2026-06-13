@@ -13,6 +13,8 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Cài đặt các thư viện hệ thống (thêm git, unzip để chạy Composer) và PHP Extensions cần thiết cho Laravel
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
+    supervisor \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -49,6 +51,13 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # RUN php artisan config:cache
 # RUN php artisan route:cache
 # RUN php artisan view:cache
+# Copy cấu hình Nginx và Supervisor vào container
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/log/supervisor
 
-# Mở port 9000 cho PHP-FPM
-EXPOSE 9000
+# Mở port 80 cho Nginx thay vì 9000 cho PHP-FPM
+EXPOSE 80
+
+# Chạy Supervisor để quản lý cả 2 tiến trình (Nginx và PHP-FPM)
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
